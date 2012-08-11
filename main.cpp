@@ -112,8 +112,8 @@ void orthfilt(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<doub
 	lpr.setPoly(lp1,pow1);
 	
 	Laurent<double> flp,mn;
-	flp.nzinv(lpd);
-	double coeff= pow(-1.0,-1);
+	flp.onzinv(lpd);
+	double coeff= -1.0;
 	vector<double> coeff_mn;
 	coeff_mn.push_back(coeff);
 	mn.setPoly(coeff_mn,-1);
@@ -123,12 +123,27 @@ void orthfilt(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<doub
 	
 }
 
+void lpoly(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<double> &lpr,
+                            Laurent<double> &hpr) {
+	
+	string fname;
+    fname=name.substr(0,2);
+    
+    if (fname == "db" || fname == "sy" || fname == "co") {
+		orthfilt(name,lpd,hpd,lpr,hpr);
+	} else if (fname == "bi") {
+		biorfilt(name,lpd,hpd,lpr,hpr);
+	}					
+								
+	
+	}
+
 int main()
 {
 	cout << "Lifting Demo" << endl;
-	string name="bior2.8";
+	string name="bior4.4";
 	Laurent<double> lpd,hpd,lpr,hpr;
-	biorfilt(name,lpd,hpd,lpr,hpr);
+	lpoly(name,lpd,hpd,lpr,hpr);
 	lpr.dispPoly();
 	hpr.dispPoly();
 	lpd.dispPoly();

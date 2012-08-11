@@ -230,6 +230,27 @@ void nzinv(Laurent &A) {
 
    }
    
+   void onzinv(Laurent &A) {
+    int la=A.highdeg();
+
+	//int lenA=A.degree()+1;
+
+	vector<T> coefA=A.poly;
+
+	la=(la-A.degree())*-1;
+
+	reverse(coefA.begin(),coefA.end());
+	
+	int N=coefA.size();
+	
+	for (int i=0; i< N ; i++) {
+		coefA[i]= coefA[i]* (int) pow(-1.0,i);
+	}
+
+    setPoly(coefA,la);
+
+   }
+   
 
    bool isMono() {
     int la=highest;
