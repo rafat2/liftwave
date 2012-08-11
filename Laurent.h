@@ -553,6 +553,8 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	}
 
     }
+
+
 	
 
 #endif /* LAURENT_H_ */
