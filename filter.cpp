@@ -132,4 +132,63 @@ void lpoly(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<double>
 	}					
 								
 	
-	}	
+}	
+
+void factor(string &name) {
+	Laurent<double> lpd,hpd,lpr,hpr;
+	lpoly(name,lpd,hpd,lpr,hpr);
+	Laurent<double> leven,lodd;
+	EvenOdd(lpr,leven,lodd);
+	vector<Laurent<double> > loup, Q;
+	Div(leven,lodd,loup);
+	Laurent<double> quot,rem;
+	int md;
+	
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+		
+		bool rmono = rem.isMono();
+		
+		if (rmono) {
+			md = rem.monoDeg();
+			cout << "md" << md << endl;
+			if (md == 0) {
+				leven = lodd;
+				lodd = rem;
+				Q.push_back(quot);
+				
+			}
+		}
+	}
+
+	
+	while (abs(rem.monoCoef(md)) > 1e-05 ) {
+		Div(leven,lodd,loup);
+	
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+
+		
+		bool rmono = rem.isMono();
+		
+		if (rmono) {
+			md = rem.monoDeg();
+			cout << "md" << md << endl;
+			if (md == 0 || abs(rem.monoCoef(md)) < 1e-05) {
+				leven = lodd;
+				lodd = rem;
+				Q.push_back(quot);
+
+			}
+		}
+	}
+		
+	}
+	cout << " Q " << endl;
+	for (int i=0; i < (int) Q.size(); i++) {
+		Q[i].dispPoly();
+	}
+	 
+}

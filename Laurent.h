@@ -28,11 +28,41 @@ public:
 	// TODO Auto-generated constructor stub
 
 }
-	void setPoly(const vector<T> &coef, int hdeg) {
-	deg=coef.size()-1;
+	void setPoly(const vector<T> &coef_i, int hdeg) {
+	vector<T> coef;
+	coef=coef_i;
+	
+	int i=0;
+	
+	while  ( (coef[i] == 0 || abs(coef[i]) < 1e-08) && coef.size() > 1 ) {
+		coef.erase(coef.begin());
+		hdeg--;
+		
+	}
+	
+	if (coef.empty()) {
+		coef.push_back((T) 0.0);
+		hdeg=0;
+		deg=0;
+	}
+	
+	i=coef.size();
+	
+	while ((coef[i-1] == 0 || abs(coef[i-1]) < 1e-08) && coef.size() > 1 ) {
+		coef.erase(coef.end()-1);
+		i=coef.size();
+	}
+	
+	if (coef.empty()) {
+		coef.push_back((T) 0.0);
+		hdeg=0;
+		deg=0;
+	}
+	
+	deg = coef.size()-1;
 	poly = coef;
 	highest = hdeg;
-	// TODO Auto-generated constructor stub
+	
 
 }
     void getPoly(vector<T> &vec) {
@@ -251,6 +281,19 @@ void nzinv(Laurent &A) {
 
    }
    
+   void nz(Laurent &A)  {
+	   
+	int la=A.highdeg();
+
+	vector<T> coefA=A.poly;
+	int N=coefA.size();
+	
+	for (int i=0; i<N;i++) {
+		coefA[i]=coefA[i]* (int) pow(-1.0,la-i);
+	}
+	setPoly(coefA,la);
+   }
+   
 
    bool isMono() {
     int la=highest;
@@ -312,7 +355,6 @@ int monoDeg() {
 			bool val = coefA[i] == 0 || abs(coefA[i]) < 1e-05;
 			if (!val) {
 	            mdeg=temp;
-				cout << mdeg << endl; 
 	        }
 			temp--;
 			
@@ -320,6 +362,15 @@ int monoDeg() {
 	}
 	
 	return mdeg;
+	
+}
+
+T monoCoef(int md) {
+	int la=highest;
+
+	vector<T> coefA=poly;
+	T temp = coefA[la];
+	return temp;
 	
 }
       
@@ -405,6 +456,7 @@ public:
 
 	}
 
+
     virtual ~LaurentMat() {
 
     }
@@ -415,7 +467,7 @@ template <typename T>
 void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
     int ha=A.highdeg();
 	int hb=B.highdeg();
-
+     
 	int lenA=A.degree()+1;
 	int lenB=B.degree()+1;
 
@@ -427,10 +479,59 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 
 	int lenC = lenA - lenB;
 
-
 	vector<T> coefA,coefB;
 	A.getPoly(coefA);
 	B.getPoly(coefB);
+	/*
+	for (int i=0; i < (int)coefA.size(); i++) {
+		if (abs(coefA[i]) <= 1e-05) {
+			coefA[i]=0.0;
+		} 
+		
+	}
+	
+	for (int i=0; i < (int)coefB.size(); i++) {
+		if (abs(coefB[i]) <= 1e-05) {
+			coefB[i]=0.0;
+		} 
+		
+	} */
+	
+	/*
+	int i=0;
+	
+	while  (abs(coefA[i]) <= 1e-05 || coefA[i] == 0) {
+		coefA.erase(coefA.begin());
+		ha--;
+		
+	}
+	
+	i=coefA.size();
+	
+	while (abs(coefA[i-1]) <=1e-05 || coefA[i-1] == 0) {
+		coefA.erase(coefA.end()-1);
+		i=coefA.size();
+	}
+	
+	i=0;
+	
+	while  (abs(coefB[i]) <= 1e-05 || coefB[i] == 0) {
+		coefB.erase(coefB.begin());
+		hb--;
+		
+	}
+	
+	i=coefB.size();
+	
+	while (abs(coefB[i-1]) <=1e-05 || coefB[i-1] == 0) {
+		coefB.erase(coefB.end()-1);
+		i=coefB.size();
+	}
+	 */
+	
+	//A.setPoly(coefA,ha);
+	//B.setPoly(coefB,hb);
+	
 	
 	if (lenC > 0) {
 		vector<T> coef_q1,coef_q2,coef_r1,coef_r2;
@@ -553,6 +654,82 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	}
 
     }
+
+template <typename T>
+void EvenOdd(Laurent<T> &A,Laurent<T> &even,Laurent<T> &odd) {
+	vector<T> coefA;
+	//la = A.highdeg();
+	A.getPoly(coefA);
+	
+	Laurent<T> B;
+	B.nz(A);
+	
+	Laurent<T> ad,su;
+	
+	ad.LaurentAdd(A,B);
+	su.LaurentSub(A,B);
+	
+	vector<T> coefad,coefsu;
+	
+	ad.getPoly(coefad);
+	su.getPoly(coefsu);
+	
+	int maxad,maxsu;
+	
+	maxad=ad.highdeg();
+	maxsu=su.highdeg();
+	
+	int i=0;
+	
+	while  (coefad[i] == 0.0 || coefad[i] == 0) {
+		coefad.erase(coefad.begin());
+		maxad--;
+		
+	}
+	
+	i=coefad.size();
+	
+	while (coefad[i-1] == 0.0 || coefad[i-1] == 0) {
+		coefad.erase(coefad.end()-1);
+		i=coefad.size();
+	}
+	
+	i=0;
+	
+	while  (coefsu[i] == 0.0 || coefsu[i] == 0) {
+		coefsu.erase(coefsu.begin());
+		maxsu--;
+		
+	}
+	
+	i=coefsu.size();
+	
+	while (coefsu[i-1] == 0.0 || coefsu[i-1] == 0) {
+		coefsu.erase(coefsu.end()-1);
+		i=coefsu.size();
+	}
+	
+	vector<T> coefad_n,coefsu_n;
+	
+	for (int i=0; i < (int) coefad.size(); i+=2) {
+		coefad_n.push_back(coefad[i]/2);
+	}
+	
+	for (int i=0; i < (int) coefsu.size(); i+=2) {
+		coefsu_n.push_back(coefsu[i]/2);
+	}
+	
+	maxad=maxad/2;
+	maxsu=(maxsu+1)/2;
+	
+	
+	even.setPoly(coefad_n,maxad);
+	odd.setPoly(coefsu_n,maxsu);
+	
+	
+}
+	
+	
 
 
 	
