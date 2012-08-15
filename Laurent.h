@@ -223,6 +223,44 @@ public:
 
 
    }
+   
+   void One() {
+	   T temp=(T) 1.0;
+	   vector<T> coef_one;
+	   coef_one.push_back(temp);
+	   int pow =0;
+	   setPoly(coef_one,pow);
+   }
+   
+   void Zero() {
+	   T temp=(T) 0.0;
+	   vector<T> coef_one;
+	   coef_one.push_back(temp);
+	   int pow =0;
+	   setPoly(coef_one,pow);
+   }
+   
+   int isZero() {
+
+	vector<T> coefA=poly;
+	
+	int lenA= coefA.size();
+	int count = 0;
+	
+	for (int i=0; i < lenA; i++) {
+		if (coefA[i] != 0 && abs(coefA[i]) > 1e-05) {
+			count++;
+		}
+		
+	}
+	
+	if (count == 0) {
+		return 1;
+	} else {
+		return 0;
+	}
+	   
+   }
 
    void zinv(Laurent &A) {
     int la=A.highdeg();
@@ -454,6 +492,63 @@ public:
 	    tempMat1.LaurentSub(tempMat1,tempMat2);
 	    oup=tempMat1;
 
+	}
+	
+	void MatMult(LaurentMat &X, LaurentMat &Y) {
+		Laurent<T> tempA,tempB;
+		Laurent<T> oupA,oupB,oupC,oupD;
+		
+		tempA.LaurentMult(X.A,Y.A);
+		tempB.LaurentMult(X.B,Y.C);
+		oupA.LaurentAdd(tempA,tempB);
+		
+		tempA.LaurentMult(X.A,Y.B);
+		tempB.LaurentMult(X.B,Y.D);
+		oupB.LaurentAdd(tempA,tempB);
+		
+		tempA.LaurentMult(X.C,Y.A);
+		tempB.LaurentMult(X.D,Y.C);
+		oupC.LaurentAdd(tempA,tempB);
+		
+		tempA.LaurentMult(X.C,Y.B);
+		tempB.LaurentMult(X.D,Y.D);
+		oupD.LaurentAdd(tempA,tempB);
+		
+		setMat(oupA,oupB,oupC,oupD);
+		
+	}
+	
+	void TZ(Laurent<T> &t) {
+		Laurent<T> t1,t2,t3,t4;
+		t3=t;
+		t1.One();
+		t2.Zero();
+		t4.One();
+		setMat(t1,t2,t3,t4);
+		
+	}
+	
+	void SZ(Laurent<T> &s) {
+		Laurent<T> t1,t2,t3,t4;
+		t2=s;
+		t1.One();
+		t3.Zero();
+		t4.One();
+		setMat(t1,t2,t3,t4);
+		
+	}
+	
+	void dispMat() {
+		cout << " Laurent Matrix" << endl;
+		cout << "(1,1) : " ;
+        A.dispPoly();
+		cout << "(1,2) : " ;
+        B.dispPoly();
+		cout << "(2,1) : " ;
+        C.dispPoly();
+		cout << "(2,2) : " ;
+        D.dispPoly();
+		
 	}
 
 
