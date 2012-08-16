@@ -22,6 +22,13 @@ int main()
 	lpoly(name,lpd,hpd,lpr,hpr);
 	Laurent<double> leven,lodd;
 	EvenOdd(lpr,leven,lodd);
+	Laurent<double> heven,hodd;
+	EvenOdd(hpr,heven,hodd);
+	lpr.dispPoly();
+	hpr.dispPoly();
+	LaurentMat<double> PZ;
+	PZ.setMat(leven,heven,lodd,hodd);
+
 	vector<Laurent<double> > loup,Q;
 	Div(leven,lodd,loup);
 	leven.dispPoly();
@@ -70,11 +77,44 @@ int main()
 	o.One();
 	z.Zero();
 	
-	LaurentMat<double> Mat1,Mat2,oup;
+	LaurentMat<double> Mat1,Mat2,oup,Kmat,P0,P0Inv,slift;
 	Mat1.SZ(Q[0]);
 	Mat2.TZ(Q[1]);
 	oup.MatMult(Mat1,Mat2);
 	oup.dispMat();
+	
+	// Set Constant Matrix [K,0,0,1/K]
+	//Where K = 1.93185
+	double K2=1.0/1.93185;
+	Laurent<double> k4,detm;
+	k4.One();
+	k4.scale(K2);
+	
+	Kmat.setMat(leven,z,z,k4);
+	
+//	P0.MatMult(oup,Kmat);
+//	P0.dispMat();
+	
+	
+//	P0.Det(detm);
+	oup.MatInv(P0Inv);
+	P0Inv.dispMat();
+	
+	slift.MatMult(P0Inv,PZ);
+	slift.dispMat();
+	
+	LaurentMat<double> Kinv,foup;
+	Kmat.MatInv(Kinv);
+	
+	foup.MatMult(slift,Kinv);
+	foup.dispMat();
+	
+	
+	
+	
+	
+	
+	
 	 
 	/*
 	Laurent<double> lpd,hpd,lpr,hpr;
