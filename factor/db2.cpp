@@ -9,11 +9,6 @@
 
 using namespace std;
 
-void rbiorfilt() {
-	
-}
-
-
 int main()
 {
 	/* db2 Wavelet Factoring Demo

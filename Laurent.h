@@ -602,6 +602,27 @@ public:
 		   Inv.setMat(NA,NA,NA,NA);
 	   }
    }
+   
+   void getLpoly(Laurent<T> &P,int N) {
+	   switch(N) {
+		   case 1:
+				P=A;
+				break;
+		   case 2:
+				P=B;
+				break;
+		   case 3:
+                P=C;
+				break;
+           case 4:
+                P=D;
+				break;
+           default:
+				cout << "getLPoly only takes values from 1 to 4 where 1 -(1,1) 2(1,2) 3 (2,1) 4 (2,2)" << endl;
+                break; 
+		   
+	   }
+   }
 
 
     virtual ~LaurentMat() {
