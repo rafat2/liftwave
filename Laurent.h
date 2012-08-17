@@ -113,7 +113,7 @@ public:
 	if (ha - A.deg < hb - B.deg ) {
 		lc=ha-A.deg;
 	} else {
-		lc=ha-B.deg;
+		lc=hb-B.deg;
 	}
 
 	vector<T> coef_c;
@@ -511,17 +511,20 @@ public:
 		tempB.LaurentMult(X.B,Y.C);
 		oupA.LaurentAdd(tempA,tempB);
 		
-		tempA.LaurentMult(X.A,Y.B);
-		tempB.LaurentMult(X.B,Y.D);
-		oupB.LaurentAdd(tempA,tempB);
+		Laurent<T> tempC,tempD;
+		tempC.LaurentMult(X.A,Y.B);
+		tempD.LaurentMult(X.B,Y.D);
+		oupB.LaurentAdd(tempC,tempD);
 		
-		tempA.LaurentMult(X.C,Y.A);
-		tempB.LaurentMult(X.D,Y.C);
-		oupC.LaurentAdd(tempA,tempB);
+		Laurent<T> tempE,tempF;
+		tempE.LaurentMult(X.C,Y.A);
+		tempF.LaurentMult(X.D,Y.C);
+		oupC.LaurentAdd(tempE,tempF);
 		
-		tempA.LaurentMult(X.C,Y.B);
-		tempB.LaurentMult(X.D,Y.D);
-		oupD.LaurentAdd(tempA,tempB);
+		Laurent<T> tempG,tempH;
+		tempG.LaurentMult(X.C,Y.B);
+		tempH.LaurentMult(X.D,Y.D);
+		oupD.LaurentAdd(tempG,tempH);
 		
 		setMat(oupA,oupB,oupC,oupD);
 		
@@ -817,7 +820,7 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 
 		//vector<Laurent<T> > lcont;
 		lcont.push_back(q);
-		lcont.push_back(B);
+		lcont.push_back(A);
 		
 	}
 

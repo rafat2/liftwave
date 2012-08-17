@@ -31,9 +31,23 @@ int main()
 	 * 
 	 * 
 	 */
-	string name="db2";
+	string name="bior2.2";
+    /*In the case of bior2.2, we need to multiply lpr by z
+     * and hpr by -z^(-1) in order to keep n even.  
+	 * 
+	 */ 
+	Laurent<double> pnz,nz;
+    vector<double> temp1;
+    temp1.push_back(1.0);
+    pnz.setPoly(temp1,1);
+    temp1.clear();
+    temp1.push_back(-1.0);
+    nz.setPoly(temp1,-1);
+	
 	Laurent<double> lpd,hpd,lpr,hpr;
 	lpoly(name,lpd,hpd,lpr,hpr);
+	lpr.LaurentMult(lpr,pnz);
+	hpr.LaurentMult(hpr,nz);
 	Laurent<double> leven,lodd;
 	EvenOdd(lpr,leven,lodd);
 	Laurent<double> heven,hodd;
@@ -44,7 +58,7 @@ int main()
 	hpr.dispPoly();
 	LaurentMat<double> PZ;
 	PZ.setMat(leven,heven,lodd,hodd);
-    
+    PZ.dispMat();
 	// Q contains the quotient (Lifting Factors)
 	// gcd algorithm is used to obtain quotients and the remainders at
 	// each step.
@@ -70,8 +84,8 @@ int main()
 		cout << endl;
 	}
 	leven = lodd;
-	lodd = loup[3];
-	Q.push_back(loup[2]);
+	lodd = loup[1];
+	Q.push_back(loup[0]);
 	loup.clear();
 	Div(leven,lodd,loup);
 	cout << "a1 and b1 components" << endl;
@@ -96,6 +110,9 @@ int main()
 	leven.dispPoly();
 	lodd.dispPoly();
 	cout <<endl;
+	cout << endl << "Lifting Steps" << endl << endl;
+	for (int i=0; i < (int) Q.size(); i++)
+		Q[i].dispPoly();
 	
 	// Building P0. SZ and TZ are primal and dual lift Laurent matrices.
 	Laurent<double> o,z;
@@ -128,16 +145,23 @@ int main()
 	oup.MatInv(P0Inv);
 	P0Inv.dispMat();
 	
+	cout << "OK1" << endl;
+	PZ.dispMat();
 	slift.MatMult(P0Inv,PZ);
+	cout << "OK2" << endl;
 	slift.dispMat();
 	
 	LaurentMat<double> Kinv,foup;
 	Kmat.MatInv(Kinv);
+	cout << "OK3" << endl;
+	Kinv.dispMat();
+	cout << "OK4" << endl;
 	// To obtain the final lifitng step, we need to eliminate constant matrix from the
 	// Left Hand side
 	foup.MatMult(slift,Kinv);
+	cout << "OK1" << endl;
 	foup.dispMat();
-	
+	cout << "OK1" << endl;
 	// As per the paper fin is of the form [1 S(Z);0 1]
 	// We find S(Z) using the function getLpoly
 	Laurent<double> fin;
