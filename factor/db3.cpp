@@ -201,12 +201,9 @@ int main()
 	// We find S(Z) using the function getLpoly
 	Laurent<double> fin;
 	foup.getLpoly(fin,2);
-	Laurent<double> fin2;
-	vector<double> coef_fin2;
-	coef_fin2.push_back(-0.38962);
-	fin2.setPoly(coef_fin2,1);
 	
-	Q.push_back(fin2);
+	
+	Q.push_back(fin);
 	cout << endl << "Lifting Steps" << endl << endl;
 	for (int i=0; i < (int) Q.size(); i++)
 		Q[i].dispPoly();
