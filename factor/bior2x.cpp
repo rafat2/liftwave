@@ -11,7 +11,8 @@ using namespace std;
 
 int main()
 {
-	/* db2 Wavelet Factoring Demo
+	/* bior2.x Wavelet Factoring Demo
+	 * with x=2,4,6,8
 	 * Based on Sweldens/Daubechies Factoring Scheme
 	 * 
 	 * I. Daubechies, W. Sweldens, Factoring wavelets transforms into lifting steps, 
@@ -26,18 +27,25 @@ int main()
 	 * 
 	 * 
 	 */
-	 
+	string name="bior2.2"; // Substitute 2.4,2.6,2.8
+    /*In the case of bior2.x, we need to multiply lpr by z
+     * and hpr by -z^(-1) in order to keep n even. 
+     * It needs to be repeated that this is not a unique factorization and
+	 * there are ways to obtain different factorizations.
+	 * 
+	 */ 
 	Laurent<double> pnz,nz;
     vector<double> temp1;
     temp1.push_back(1.0);
     pnz.setPoly(temp1,1);
     temp1.clear();
-    temp1.push_back(1.0);
+    temp1.push_back(-1.0);
     nz.setPoly(temp1,-1);
-	 
-	string name="db4";
+	
 	Laurent<double> lpd,hpd,lpr,hpr;
 	lpoly(name,lpd,hpd,lpr,hpr);
+	lpr.LaurentMult(lpr,pnz);
+	hpr.LaurentMult(hpr,nz);
 	Laurent<double> leven,lodd;
 	EvenOdd(lpr,leven,lodd);
 	Laurent<double> heven,hodd;
@@ -47,10 +55,8 @@ int main()
 	cout << "Reconstruction High Pass Filters" << endl;
 	hpr.dispPoly();
 	LaurentMat<double> PZ;
-	leven.LaurentMult(leven,pnz);
-	hodd.LaurentMult(hodd,nz);
 	PZ.setMat(leven,heven,lodd,hodd);
-    
+    PZ.dispMat();
 	// Q contains the quotient (Lifting Factors)
 	// gcd algorithm is used to obtain quotients and the remainders at
 	// each step.
@@ -97,63 +103,24 @@ int main()
 	leven = lodd;
 	lodd = loup[1];
 	Q.push_back(loup[0]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a2 and b2 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-		loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a3 and b3 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[1];
-	Q.push_back(loup[0]);
 	cout << "an(constant) and bn(zero). A constant quotient is obtained which terminates the algorithm" << endl;
 	Div(leven,lodd,loup);
 	leven.dispPoly();
 	lodd.dispPoly();
 	cout <<endl;
+	cout << endl << "Lifting Steps" << endl << endl;
+	for (int i=0; i < (int) Q.size(); i++)
+		Q[i].dispPoly();
 	
 	// Building P0. SZ and TZ are primal and dual lift Laurent matrices.
 	Laurent<double> o,z;
 	o.One();
 	z.Zero();
 	
-	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,oup,Kmat,P0,P0Inv,slift;
+	LaurentMat<double> Mat1,Mat2,oup,Kmat,P0,P0Inv,slift;
 	Mat1.SZ(Q[0]);
 	Mat2.TZ(Q[1]);
-	Mat3.SZ(Q[2]);
-	Mat4.TZ(Q[3]);
 	oup.MatMult(Mat1,Mat2);
-	oup.MatMult(oup,Mat3);
-	oup.MatMult(oup,Mat4);
 	oup.dispMat();
 	
 	// Set Constant Matrix [K,0,0,1/K]
@@ -176,16 +143,23 @@ int main()
 	oup.MatInv(P0Inv);
 	P0Inv.dispMat();
 	
+	cout << "OK1" << endl;
+	PZ.dispMat();
 	slift.MatMult(P0Inv,PZ);
+	cout << "OK2" << endl;
 	slift.dispMat();
 	
 	LaurentMat<double> Kinv,foup;
 	Kmat.MatInv(Kinv);
+	cout << "OK3" << endl;
+	Kinv.dispMat();
+	cout << "OK4" << endl;
 	// To obtain the final lifitng step, we need to eliminate constant matrix from the
 	// Left Hand side
 	foup.MatMult(slift,Kinv);
+	cout << "OK1" << endl;
 	foup.dispMat();
-	
+	cout << "OK1" << endl;
 	// As per the paper fin is of the form [1 S(Z);0 1]
 	// We find S(Z) using the function getLpoly
 	Laurent<double> fin;

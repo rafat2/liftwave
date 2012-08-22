@@ -156,7 +156,7 @@ public:
 	if (ha - A.deg < hb - B.deg ) {
 		lc=ha-A.deg;
 	} else {
-		lc=ha-B.deg;
+		lc=hb-B.deg;
 	}
 
 	vector<T> coef_c;
@@ -511,20 +511,18 @@ public:
 		tempB.LaurentMult(X.B,Y.C);
 		oupA.LaurentAdd(tempA,tempB);
 		
-		Laurent<T> tempC,tempD;
-		tempC.LaurentMult(X.A,Y.B);
-		tempD.LaurentMult(X.B,Y.D);
-		oupB.LaurentAdd(tempC,tempD);
+		tempA.LaurentMult(X.A,Y.B);
+		tempB.LaurentMult(X.B,Y.D);
+		oupB.LaurentAdd(tempA,tempB);
 		
-		Laurent<T> tempE,tempF;
-		tempE.LaurentMult(X.C,Y.A);
-		tempF.LaurentMult(X.D,Y.C);
-		oupC.LaurentAdd(tempE,tempF);
+		tempA.LaurentMult(X.C,Y.A);
+		tempB.LaurentMult(X.D,Y.C);
+		oupC.LaurentAdd(tempA,tempB);
 		
-		Laurent<T> tempG,tempH;
-		tempG.LaurentMult(X.C,Y.B);
-		tempH.LaurentMult(X.D,Y.D);
-		oupD.LaurentAdd(tempG,tempH);
+
+		tempA.LaurentMult(X.C,Y.B);
+		tempB.LaurentMult(X.D,Y.D);
+		oupD.LaurentAdd(tempA,tempB);
 		
 		setMat(oupA,oupB,oupC,oupD);
 		
@@ -576,6 +574,11 @@ public:
 	   Det(det_o);
 	   if (det_o.isMono()) {
 		   T coeff_d;
+		   Laurent<T> A2,B2,C2,D2;
+		   A2=A;
+		   B2=B;
+		   C2=C;
+		   D2=D;
 		   int mc;
 		   mc = det_o.monoDeg();
 		   mc = -1 *mc;
@@ -589,15 +592,15 @@ public:
 		   Laurent<T> new_sc;
 		   new_sc.setPoly(cfd,mc);
 		   
-		   B.scale(-1.0);
-		   C.scale(-1.0);
+		   B2.scale(-1.0);
+		   C2.scale(-1.0);
 		   
-		   A.LaurentMult(A,new_sc);
-		   B.LaurentMult(B,new_sc);
-		   C.LaurentMult(C,new_sc);
-		   D.LaurentMult(D,new_sc);
+		   A2.LaurentMult(A2,new_sc);
+		   B2.LaurentMult(B2,new_sc);
+		   C2.LaurentMult(C2,new_sc);
+		   D2.LaurentMult(D2,new_sc);
 		   
-		   Inv.setMat(D,B,C,A);
+		   Inv.setMat(D2,B2,C2,A2);
 		   
 	   } else {
 		   Laurent<T> NA;
