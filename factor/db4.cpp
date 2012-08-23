@@ -47,8 +47,8 @@ int main()
 	cout << "Reconstruction High Pass Filters" << endl;
 	hpr.dispPoly();
 	LaurentMat<double> PZ;
-	leven.LaurentMult(leven,pnz);
-	hodd.LaurentMult(hodd,nz);
+	//leven.LaurentMult(leven,pnz);
+	//hodd.LaurentMult(hodd,nz);
 	PZ.setMat(leven,heven,lodd,hodd);
     
 	// Q contains the quotient (Lifting Factors)
@@ -76,8 +76,8 @@ int main()
 		cout << endl;
 	}
 	leven = lodd;
-	lodd = loup[1];
-	Q.push_back(loup[0]);
+	lodd = loup[3];
+	Q.push_back(loup[2]);
 	loup.clear();
 	Div(leven,lodd,loup);
 	cout << "a1 and b1 components" << endl;
@@ -209,6 +209,16 @@ int main()
 	oup.MatMult(oup,Kmat);
 	oup.dispMat(); 
 	PZ.dispMat();
+	Laurent<double> ou1,ou2,ou3,ou4;
+	oup.getLpoly(ou1,1);
+	oup.getLpoly(ou2,2);
+	oup.getLpoly(ou3,3);
+	oup.getLpoly(ou4,4);
+	Laurent<double> Hout,Gout;
+	Hout.merge(ou1,ou3);
+	Hout.dispPoly();
+	Gout.merge(ou2,ou4);
+	Gout.dispPoly();
 
 	return 0;
 }

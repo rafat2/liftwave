@@ -96,13 +96,12 @@ void biorfilt(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<doub
 	
 }
 
-void orthfilt(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<double> &lpr,
+void orthfilt(string name, int pow1, Laurent<double> &lpd,Laurent<double> &hpd,Laurent<double> &lpr,
                             Laurent<double> &hpr) {
 	vector<double> lp1,lp2,hp1,hp2;
 	filtcoef(name,lp1,hp1,lp2,hp2);
 	//int N=lp1.size()-1;
 	reverse(lp1.begin(),lp1.end());
-	int pow1=0;
 	
 	lpd.setPoly(lp1,pow1);
 	lpr.setPoly(lp1,pow1);
@@ -124,9 +123,10 @@ void lpoly(string name,Laurent<double> &lpd,Laurent<double> &hpd,Laurent<double>
 	
 	string fname;
     fname=name.substr(0,2);
+	int pow=0;
     
     if (fname == "db" || fname == "sy" || fname == "co") {
-		orthfilt(name,lpd,hpd,lpr,hpr);
+		orthfilt(name,pow,lpd,hpd,lpr,hpr);
 	} else if (fname == "bi") {
 		biorfilt(name,lpd,hpd,lpr,hpr);
 	}					

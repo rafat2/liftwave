@@ -420,6 +420,26 @@ T monoCoef(int md) {
 	return temp;
 	
 }
+
+void merge(Laurent &X, Laurent &Y) {
+	int lx=X.highest;
+	int ly=Y.highest;
+	
+	vector<T> xvec=X.poly;
+	vector<T> yvec=Y.poly;
+	vector<T> mvec;
+	
+	int lenA=X.deg+1;
+	
+	for (int i=0; i < lenA; i++) {
+		mvec.push_back(xvec[i]);
+		mvec.push_back(yvec[i]);
+		
+	}
+	int mhdeg = 2*lx;
+	
+	setPoly(mvec,mhdeg);
+}
       
 
 void LaurentDiv(Laurent &A, Laurent &B, vector<Laurent<T> > &lcont) {

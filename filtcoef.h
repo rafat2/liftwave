@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int filtcoef(string name, vector<double> &lp1, vector<double> &hp1, vector<double> &lp2,
+int inline filtcoef(string name, vector<double> &lp1, vector<double> &hp1, vector<double> &lp2,
                 vector<double> &hp2){
     if (name == "haar" || name == "db1" ) {
         lp1.push_back(0.7071);lp1.push_back(0.7071);

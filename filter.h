@@ -12,7 +12,7 @@ using namespace std;
 void biorfilt(string ,Laurent<double> &,Laurent<double> &,Laurent<double> &,
                             Laurent<double> &) ;
 
-void orthfilt(string ,Laurent<double> &,Laurent<double> &,Laurent<double> &,
+void orthfilt(string ,int ,Laurent<double> &,Laurent<double> &,Laurent<double> &,
                             Laurent<double> &);
 void lpoly(string ,Laurent<double> &,Laurent<double> &,Laurent<double> &,
                             Laurent<double> &);	
