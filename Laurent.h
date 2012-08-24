@@ -34,7 +34,7 @@ public:
 	
 	int i=0;
 	
-	while  ( (coef[i] == 0 || abs(coef[i]) < 1e-06) && coef.size() > 1 ) {
+	while  ( (coef[i] == 0 || abs(coef[i]) < 1e-07) && coef.size() > 1 ) {
 		coef.erase(coef.begin());
 		hdeg--;
 		
@@ -48,7 +48,7 @@ public:
 	
 	i=coef.size();
 	
-	while ((coef[i-1] == 0 || abs(coef[i-1]) < 1e-06) && coef.size() > 1 ) {
+	while ((coef[i-1] == 0 || abs(coef[i-1]) < 1e-07) && coef.size() > 1 ) {
 		coef.erase(coef.end()-1);
 		i=coef.size();
 	}
@@ -248,7 +248,7 @@ public:
 	int count = 0;
 	
 	for (int i=0; i < lenA; i++) {
-		if (coefA[i] != 0 && abs(coefA[i]) > 1e-06) {
+		if (coefA[i] != 0 && abs(coefA[i]) > 1e-07) {
 			count++;
 		}
 		
@@ -355,7 +355,7 @@ void nzinv(Laurent &A) {
 	}
 
 	if (lenA == 1) {
-	    if (coefA[0] != 0 || abs(coefA[0]) <= 1e-06) {
+	    if (coefA[0] != 0 || abs(coefA[0]) <= 1e-07) {
 	        mono = true;
 
 	    } else {
@@ -368,7 +368,7 @@ void nzinv(Laurent &A) {
 	if (lenA > 1) {
 	    int j=0;
 	    for (int i=0; i < lenA; i++) {
-	        if (coefA[i] == 0 || abs(coefA[i]) <= 1e-06) {
+	        if (coefA[i] == 0 || abs(coefA[i]) <= 1e-07) {
 	            j++;
 	        }
 
@@ -399,7 +399,7 @@ int monoDeg() {
 	} else {
 		int temp=highest;
 		for (int i=0; i < lenA; i++) {
-			bool val = coefA[i] == 0 || abs(coefA[i]) < 1e-06;
+			bool val = coefA[i] == 0 || abs(coefA[i]) < 1e-07;
 			if (!val) {
 	            mdeg=temp;
 	        }
@@ -428,15 +428,31 @@ void merge(Laurent &X, Laurent &Y) {
 	vector<T> xvec=X.poly;
 	vector<T> yvec=Y.poly;
 	vector<T> mvec;
+	int mhdeg;
 	
 	int lenA=X.deg+1;
 	
-	for (int i=0; i < lenA; i++) {
+	int xhdeg= 2*lx;
+	int yhdeg=2*ly-1;
+	
+	if (xhdeg > yhdeg) {
+	
+	    for (int i=0; i < lenA; i++) {
 		mvec.push_back(xvec[i]);
 		mvec.push_back(yvec[i]);
 		
 	}
-	int mhdeg = 2*lx;
+	
+	mhdeg=xhdeg;
+	} else {
+		for (int i=0; i < lenA; i++) {
+		mvec.push_back(yvec[i]);
+		mvec.push_back(xvec[i]);
+		
+	}
+	mhdeg=yhdeg;
+	
+	}
 	
 	setPoly(mvec,mhdeg);
 }
@@ -521,6 +537,30 @@ public:
 	    tempMat1.LaurentSub(tempMat1,tempMat2);
 	    oup=tempMat1;
 
+	}
+	
+	void MatAdd(LaurentMat &X, LaurentMat &Y) {
+		Laurent<T> oupA,oupB,oupC,oupD;
+		
+		oupA.LaurentAdd(X.A,Y.A);
+		oupB.LaurentAdd(X.B,Y.B);
+		oupC.LaurentAdd(X.C,Y.C);
+		oupD.LaurentAdd(X.D,Y.D);
+		
+		setMat(oupA,oupB,oupC,oupD);
+		
+	}
+	
+	void MatSub(LaurentMat &X, LaurentMat &Y) {
+		Laurent<T> oupA,oupB,oupC,oupD;
+		
+		oupA.LaurentSub(X.A,Y.A);
+		oupB.LaurentSub(X.B,Y.B);
+		oupC.LaurentSub(X.C,Y.C);
+		oupD.LaurentSub(X.D,Y.D);
+		
+		setMat(oupA,oupB,oupC,oupD);
+		
 	}
 	
 	void MatMult(LaurentMat &X, LaurentMat &Y) {
@@ -678,14 +718,14 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	B.getPoly(coefB);
 	/*
 	for (int i=0; i < (int)coefA.size(); i++) {
-		if (abs(coefA[i]) <= 1e-06) {
+		if (abs(coefA[i]) <= 1e-07) {
 			coefA[i]=0.0;
 		} 
 		
 	}
 	
 	for (int i=0; i < (int)coefB.size(); i++) {
-		if (abs(coefB[i]) <= 1e-06) {
+		if (abs(coefB[i]) <= 1e-07) {
 			coefB[i]=0.0;
 		} 
 		
@@ -694,7 +734,7 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	/*
 	int i=0;
 	
-	while  (abs(coefA[i]) <= 1e-06 || coefA[i] == 0) {
+	while  (abs(coefA[i]) <= 1e-07 || coefA[i] == 0) {
 		coefA.erase(coefA.begin());
 		ha--;
 		
@@ -702,14 +742,14 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	
 	i=coefA.size();
 	
-	while (abs(coefA[i-1]) <=1e-06 || coefA[i-1] == 0) {
+	while (abs(coefA[i-1]) <=1e-07 || coefA[i-1] == 0) {
 		coefA.erase(coefA.end()-1);
 		i=coefA.size();
 	}
 	
 	i=0;
 	
-	while  (abs(coefB[i]) <= 1e-06 || coefB[i] == 0) {
+	while  (abs(coefB[i]) <= 1e-07 || coefB[i] == 0) {
 		coefB.erase(coefB.begin());
 		hb--;
 		
@@ -717,7 +757,7 @@ void Div(Laurent<T> &A, Laurent<T> &B, vector<Laurent<T> > &lcont) {
 	
 	i=coefB.size();
 	
-	while (abs(coefB[i-1]) <=1e-06 || coefB[i-1] == 0) {
+	while (abs(coefB[i-1]) <=1e-07 || coefB[i-1] == 0) {
 		coefB.erase(coefB.end()-1);
 		i=coefB.size();
 	}

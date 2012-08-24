@@ -37,7 +37,8 @@ int main()
 
 	
 	Laurent<double> lpd,hpd,lpr,hpr;
-	lpoly(name,lpd,hpd,lpr,hpr);
+	int pow=2;
+	orthfilt(name,pow,lpd,hpd,lpr,hpr);
 	//lpr.LaurentMult(lpr,pnz);
 	//hpr.LaurentMult(hpr,nz);
 	Laurent<double> leven,lodd;
@@ -59,13 +60,13 @@ int main()
     temp1.push_back(1.0);
     pnz.setPoly(temp1,1);
     temp1.clear();
-    temp1.push_back(1.0);
+    temp1.push_back(-1.0);
     nz.setPoly(temp1,-1);
 	
-	lpr.LaurentMult(lpr,pnz);
-	hpr.LaurentMult(hpr,nz);
-	EvenOdd(lpr,leven,lodd);
-	EvenOdd(hpr,heven,hodd);
+	//lpr.LaurentMult(lpr,pnz);
+	//hpr.LaurentMult(hpr,nz);
+	EvenOdd(lpr,lodd,leven);
+	EvenOdd(hpr,hodd,heven);
 	PZ.setMat(lodd,hodd,leven,heven);
 	
 	// Q contains the quotient (Lifting Factors)
@@ -199,9 +200,14 @@ int main()
 	cout << "OK1" << endl;
 	// As per the paper fin is of the form [1 S(Z);0 1]
 	// We find S(Z) using the function getLpoly
-	Laurent<double> fin;
+	Laurent<double> fin,sgn;
 	foup.getLpoly(fin,2);
 	
+	/*vector<double> tempsgn;
+    tempsgn.push_back(-1.0);
+    sgn.setPoly(tempsgn,0);
+	
+	fin.LaurentMult(sgn,fin);*/
 	
 	Q.push_back(fin);
 	cout << endl << "Lifting Steps" << endl << endl;
@@ -217,8 +223,22 @@ int main()
 	oup.MatMult(oup,Mat4);
 	oup.MatMult(oup,Kmat);
 	
-	oup.dispMat();
+	LaurentMat<double> oupX;
 	
+	oupX.MatSub(oup,PZ);
+	
+	oupX.dispMat();
+	
+	Laurent<double> ou1,ou2,ou3,ou4;
+	oup.getLpoly(ou1,1);
+	oup.getLpoly(ou2,2);
+	oup.getLpoly(ou3,3);
+	oup.getLpoly(ou4,4);
+	Laurent<double> Hout,Gout;
+	Hout.merge(ou1,ou3);
+	Hout.dispPoly();
+	Gout.merge(ou2,ou4);
+	Gout.dispPoly();
 	
     
 	 

@@ -11,7 +11,8 @@ using namespace std;
 
 int main()
 {
-	/* db2 Wavelet Factoring Demo
+	/* bior2.x Wavelet Factoring Demo
+	 * with x=2,4,6,8
 	 * Based on Sweldens/Daubechies Factoring Scheme
 	 * 
 	 * I. Daubechies, W. Sweldens, Factoring wavelets transforms into lifting steps, 
@@ -26,18 +27,20 @@ int main()
 	 * 
 	 * 
 	 */
-	 
-	Laurent<double> pnz,nz;
-    vector<double> temp1;
-    temp1.push_back(1.0);
-    pnz.setPoly(temp1,1);
-    temp1.clear();
-    temp1.push_back(1.0);
-    nz.setPoly(temp1,-1);
-	 
-	string name="db10";
+	string name="db3"; 
+    /*In the case of db3, we need to multiply lpr by z
+     * and hpr by z^(-1) in order to keep n even. 
+     * It needs to be repeated that this is not a unique factorization and
+	 * there are ways to obtain different factorization schemes.
+	 * 
+	 */ 
+
+	
 	Laurent<double> lpd,hpd,lpr,hpr;
-	lpoly(name,lpd,hpd,lpr,hpr);
+	int pow=2;
+	orthfilt(name,pow,lpd,hpd,lpr,hpr);
+	//lpr.LaurentMult(lpr,pnz);
+	//hpr.LaurentMult(hpr,nz);
 	Laurent<double> leven,lodd;
 	EvenOdd(lpr,leven,lodd);
 	Laurent<double> heven,hodd;
@@ -47,10 +50,25 @@ int main()
 	cout << "Reconstruction High Pass Filters" << endl;
 	hpr.dispPoly();
 	LaurentMat<double> PZ;
-	//leven.LaurentMult(leven,pnz);
-	//hodd.LaurentMult(hodd,nz);
-	PZ.setMat(leven,heven,lodd,hodd);
-    
+	//PZ.setMat(leven,heven,lodd,hodd);
+	//Laurent<double> dpz;
+    //PZ.Det(dpz);
+	//dpz.dispPoly();
+	
+	Laurent<double> pnz,nz;
+    vector<double> temp1;
+    temp1.push_back(1.0);
+    pnz.setPoly(temp1,1);
+    temp1.clear();
+    temp1.push_back(-1.0);
+    nz.setPoly(temp1,-1);
+	
+	//lpr.LaurentMult(lpr,pnz);
+	//hpr.LaurentMult(hpr,nz);
+	EvenOdd(lpr,lodd,leven);
+	EvenOdd(hpr,hodd,heven);
+	PZ.setMat(lodd,hodd,leven,heven);
+	
 	// Q contains the quotient (Lifting Factors)
 	// gcd algorithm is used to obtain quotients and the remainders at
 	// each step.
@@ -95,34 +113,15 @@ int main()
 	}
 	
 	leven = lodd;
-	lodd = loup[1];
-	Q.push_back(loup[0]);
+	lodd = loup[3];
+	Q.push_back(loup[2]);
 	loup.clear();
 	Div(leven,lodd,loup);
-	cout << "a2 and b2 components" << endl;
+	cout << "a1 and b1 components" << endl;
 	leven.dispPoly();
 	lodd.dispPoly();
 	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-		loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a3 and b3 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
+	cout << "All Quotients and Remainders obtained after the third step of gcd algorithm" << endl;
 	for (int i=0; i < (int) loup.size() / 2;i++) {
 		quot=loup[2*i];
 		rem=loup[2*i+1];
@@ -135,151 +134,27 @@ int main()
 	leven = lodd;
 	lodd = loup[1];
 	Q.push_back(loup[0]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a4 and b4 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a5 and b5 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a6 and b6 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a7 and b7 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[1];
-	Q.push_back(loup[0]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a8 and b8 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
-	loup.clear();
-	Div(leven,lodd,loup);
-	cout << "a9 and b9 components" << endl;
-	leven.dispPoly();
-	lodd.dispPoly();
-	cout <<endl;
-	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
-	for (int i=0; i < (int) loup.size() / 2;i++) {
-		quot=loup[2*i];
-		rem=loup[2*i+1];
-		
-		quot.dispPoly();
-		rem.dispPoly();
-		cout << endl;
-	}
-	
-	leven = lodd;
-	lodd = loup[5];
-	Q.push_back(loup[4]);
 	cout << "an(constant) and bn(zero). A constant quotient is obtained which terminates the algorithm" << endl;
 	Div(leven,lodd,loup);
 	leven.dispPoly();
 	lodd.dispPoly();
 	cout <<endl;
+	cout << endl << "Lifting Steps" << endl << endl;
+	for (int i=0; i < (int) Q.size(); i++)
+		Q[i].dispPoly();
 	
 	// Building P0. SZ and TZ are primal and dual lift Laurent matrices.
 	Laurent<double> o,z;
 	o.One();
 	z.Zero();
 	
-	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,Mat5,Mat6,Mat7,Mat8,Mat9,Mat10,oup,Kmat,P0,P0Inv,slift;
-	Mat1.SZ(Q[0]);
-	Mat2.TZ(Q[1]);
-	Mat3.SZ(Q[2]);
-	Mat4.TZ(Q[3]);
-	Mat5.SZ(Q[4]);
-	Mat6.TZ(Q[5]);
-	Mat7.SZ(Q[6]);
-	Mat8.TZ(Q[7]);
-	Mat9.SZ(Q[8]);
-	Mat10.TZ(Q[9]);
-	oup.MatMult(Mat1,Mat2);
-	oup.MatMult(oup,Mat3);
-	oup.MatMult(oup,Mat4);
-	oup.MatMult(oup,Mat5);
-	oup.MatMult(oup,Mat6);
-	oup.MatMult(oup,Mat7);
-	oup.MatMult(oup,Mat8);
-	oup.MatMult(oup,Mat9);
-	oup.MatMult(oup,Mat10);
+	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,oup,Kmat,P0,P0Inv,slift,id;
+	Mat1.TZ(Q[0]);
+	Mat2.SZ(Q[1]);
+	Mat3.TZ(Q[2]);
+	Mat4.MatMult(Mat1,Mat2);
+	oup.MatMult(Mat4,Mat3);
+	cout << " OUP " << endl;
 	oup.dispMat();
 	
 	// Set Constant Matrix [K,0,0,1/K]
@@ -300,53 +175,60 @@ int main()
 	// If the Matrix is Invertible then you can easily find
 	// slift, which is simple inv(P0)*PZ
 	oup.MatInv(P0Inv);
-	P0Inv.dispMat();
+	//id.MatMult(oup,P0Inv);
+	oup.dispMat();
+	//id.dispMat();
 	
+	cout << "OK1" << endl;
+	PZ.dispMat();
 	slift.MatMult(P0Inv,PZ);
+	cout << "OK2" << endl;
 	slift.dispMat();
+	//oup.MatMult(oup,Kmat);
 	
 	LaurentMat<double> Kinv,foup;
 	Kmat.MatInv(Kinv);
+	cout << "OK3" << endl;
+	Kinv.dispMat();
+	cout << "OK4" << endl;
+	//oup.MatInv(P0Inv);
 	// To obtain the final lifitng step, we need to eliminate constant matrix from the
 	// Left Hand side
 	foup.MatMult(slift,Kinv);
+	cout << "OK1" << endl;
 	foup.dispMat();
-	
+	cout << "OK1" << endl;
 	// As per the paper fin is of the form [1 S(Z);0 1]
 	// We find S(Z) using the function getLpoly
-	Laurent<double> fin;
+	Laurent<double> fin,sgn;
 	foup.getLpoly(fin,2);
+	
+	/*vector<double> tempsgn;
+    tempsgn.push_back(-1.0);
+    sgn.setPoly(tempsgn,0);
+	
+	fin.LaurentMult(sgn,fin);*/
 	
 	Q.push_back(fin);
 	cout << endl << "Lifting Steps" << endl << endl;
 	for (int i=0; i < (int) Q.size(); i++)
 		Q[i].dispPoly();
 	
-	LaurentMat<double> Mat11;
-	Mat1.SZ(Q[0]);
-	Mat2.TZ(Q[1]);
-	Mat3.SZ(Q[2]);
-	Mat4.TZ(Q[3]);
-	Mat5.SZ(Q[4]);
-	Mat6.TZ(Q[5]);
-	Mat7.SZ(Q[6]);
-	Mat8.TZ(Q[7]);
-	Mat9.SZ(Q[8]);
-	Mat10.TZ(Q[9]);
-	Mat11.SZ(Q[10]);
+    Mat1.TZ(Q[0]);
+	Mat2.SZ(Q[1]);
+	Mat3.TZ(Q[2]);
+    Mat4.SZ(Q[3]);
 	oup.MatMult(Mat1,Mat2);
 	oup.MatMult(oup,Mat3);
 	oup.MatMult(oup,Mat4);
-	oup.MatMult(oup,Mat5);
-	oup.MatMult(oup,Mat6);
-	oup.MatMult(oup,Mat7);
-	oup.MatMult(oup,Mat8);
-	oup.MatMult(oup,Mat9);
-	oup.MatMult(oup,Mat10);
-	oup.MatMult(oup,Mat11);
 	oup.MatMult(oup,Kmat);
-	oup.dispMat(); 
-	PZ.dispMat();
+	
+	LaurentMat<double> oupX;
+	
+	oupX.MatSub(oup,PZ);
+	
+	oupX.dispMat();
+	
 	Laurent<double> ou1,ou2,ou3,ou4;
 	oup.getLpoly(ou1,1);
 	oup.getLpoly(ou2,2);
@@ -357,6 +239,9 @@ int main()
 	Hout.dispPoly();
 	Gout.merge(ou2,ou4);
 	Gout.dispPoly();
+	
+    
+	 
 
 	return 0;
 }
