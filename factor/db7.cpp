@@ -27,7 +27,7 @@ int main()
 	 * 
 	 * 
 	 */
-	string name="db5"; 
+	string name="db7"; 
     /*In the case of db3, we need to multiply lpr by z
      * and hpr by z^(-1) in order to keep n even. 
      * It needs to be repeated that this is not a unique factorization and
@@ -37,7 +37,7 @@ int main()
 
 	
 	Laurent<double> lpd,hpd,lpr,hpr;
-	int pow=4;
+	int pow=6;
 	orthfilt(name,pow,lpd,hpd,lpr,hpr);
 	//lpr.LaurentMult(lpr,pnz);
 	//hpr.LaurentMult(hpr,nz);
@@ -170,6 +170,44 @@ int main()
 	}
 	
 	leven = lodd;
+	lodd = loup[3];
+	Q.push_back(loup[2]);
+		loup.clear();
+	Div(leven,lodd,loup);
+	cout << "a5 and b5 components" << endl;
+	leven.dispPoly();
+	lodd.dispPoly();
+	cout <<endl;
+	cout << "All Quotients and Remainders obtained after the third step of gcd algorithm" << endl;
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+		
+		quot.dispPoly();
+		rem.dispPoly();
+		cout << endl;
+	}
+	
+	leven = lodd;
+	lodd = loup[3];
+	Q.push_back(loup[2]);
+		loup.clear();
+	Div(leven,lodd,loup);
+	cout << "a6 and b6 components" << endl;
+	leven.dispPoly();
+	lodd.dispPoly();
+	cout <<endl;
+	cout << "All Quotients and Remainders obtained after the third step of gcd algorithm" << endl;
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+		
+		quot.dispPoly();
+		rem.dispPoly();
+		cout << endl;
+	}
+	
+	leven = lodd;
 	lodd = loup[1];
 	Q.push_back(loup[0]);
 	cout << "an(constant) and bn(zero). A constant quotient is obtained which terminates the algorithm" << endl;
@@ -186,16 +224,20 @@ int main()
 	o.One();
 	z.Zero();
 	
-	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,Mat5,oup,Kmat,P0,P0Inv,slift,id;
+	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,Mat5,Mat6,Mat7,oup,Kmat,P0,P0Inv,slift,id;
 	Mat1.TZ(Q[0]);
 	Mat2.SZ(Q[1]);
 	Mat3.TZ(Q[2]);
 	Mat4.SZ(Q[3]);
 	Mat5.TZ(Q[4]);
+	Mat6.SZ(Q[5]);
+	Mat7.TZ(Q[6]);
 	oup.MatMult(Mat1,Mat2);
 	oup.MatMult(oup,Mat3);
 	oup.MatMult(oup,Mat4);
 	oup.MatMult(oup,Mat5);
+	oup.MatMult(oup,Mat6);
+	oup.MatMult(oup,Mat7);
 	cout << " OUP " << endl;
 	oup.dispMat();
 	
@@ -256,7 +298,7 @@ int main()
 	for (int i=0; i < (int) Q.size(); i++)
 		Q[i].dispPoly();
 	
-	LaurentMat<double> Mat6;
+	LaurentMat<double> Mat8;
 	
     Mat1.TZ(Q[0]);
 	Mat2.SZ(Q[1]);
@@ -264,11 +306,15 @@ int main()
     Mat4.SZ(Q[3]);
 	Mat5.TZ(Q[4]);
     Mat6.SZ(Q[5]);
+	Mat7.TZ(Q[6]);
+    Mat8.SZ(Q[7]);
 	oup.MatMult(Mat1,Mat2);
 	oup.MatMult(oup,Mat3);
 	oup.MatMult(oup,Mat4);
 	oup.MatMult(oup,Mat5);
 	oup.MatMult(oup,Mat6);
+	oup.MatMult(oup,Mat7);
+	oup.MatMult(oup,Mat8);
 	oup.MatMult(oup,Kmat);
 	
 	LaurentMat<double> oupX;
