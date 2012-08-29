@@ -46,8 +46,8 @@ public:
 			for (int len_dl = 0; len_dl < (int) dl.size();len_dl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_dl-max_pow+lf) >= 0 && (len_dl-max_pow+lf) < sl.size()) {
-						temp=temp+filt[lf]*sl[len_dl-max_pow+lf];
+					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < sl.size()) {
+						temp=temp+filt[lf]*sl[len_dl+max_pow-lf];
 					
 					}
 				}
@@ -60,8 +60,8 @@ public:
 			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_sl-max_pow+lf) >= 0 && (len_sl-max_pow+lf) < dl.size()) {
-						temp=temp+filt[lf]*dl[len_sl-max_pow+lf];
+					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < dl.size()) {
+						temp=temp+filt[lf]*dl[len_sl+max_pow-lf];
 					
 					}
 				}
@@ -133,8 +133,8 @@ public:
 			for (int len_dl = 0; len_dl < (int) dl.size();len_dl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_dl-max_pow+lf) >= 0 && (len_dl-max_pow+lf) < sl.size()) {
-						temp=temp+filt[lf]*sl[len_dl-max_pow+lf];
+					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < sl.size()) {
+						temp=temp+filt[lf]*sl[len_dl+max_pow-lf];
 					
 					}
 				}
@@ -147,8 +147,8 @@ public:
 			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_sl-max_pow+lf) >= 0 && (len_sl-max_pow+lf) < dl.size()) {
-						temp=temp+filt[lf]*dl[len_sl-max_pow+lf];
+					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < dl.size()) {
+						temp=temp+filt[lf]*dl[len_sl+max_pow-lf];
 					
 					}
 				}
