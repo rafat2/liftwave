@@ -15,6 +15,7 @@ class liftscheme{
 	vector<double> lcoeff;
 	vector<int> plen;
     double Kconst;
+	string wname;
 	
 public:
 	liftscheme() {
@@ -23,13 +24,30 @@ public:
 		Kconst=1.000;
 		vector<double> lcoeff;
 		vector<int> plen;
+		wname="lazy";
 		
 	}
 	
 	liftscheme(string &name) {
+		wname=name;
 //		vector<double> coeffs;
-		
-		if (name == "db2") {
+		if (name == "haar" || name == "db1" ) {
+            ltype="dp";
+			stages=2;
+			Kconst=0.7071;
+			
+			//Stage 1,2
+			double d1[]={1.0000};
+			double p1[]={-0.5000};
+			
+			
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			lcoeff.insert(lcoeff.begin(),d1,d1+1);
+			
+			int pl[]={1,0,1,0};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+			
+		} else if (name == "db2") {
 
 		    ltype="pdp";
 			stages=3;
@@ -110,6 +128,25 @@ public:
 			int pl[]={2,1,2,0};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
+	} else if (name == "bior2.4") {
+
+		    ltype="dp";
+			stages=2;
+			Kconst=0.707107;
+			
+			//Stage 1,2
+			
+			double d1[]={0.5,0.5};
+			double p1[]={0.046875,-0.296875,-0.296875,0.046875};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p1,p1+4);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			
+			int pl[]={2,1,4,1};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
 	}
 	
 	}
@@ -120,6 +157,10 @@ int nlifts() {
 
 double K() {
 	return Kconst;
+}
+
+string getName() {
+	return wname;
 }	
 
 void getScheme(vector<double> &coeff, vector<int> &lenvec, string &lattice,double &Kc) {
