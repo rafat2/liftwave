@@ -184,16 +184,34 @@ void disp() {
 			}
 			cout << "Coefficients : ";
 			int t2=0;
+			vector<double> poly_coeff;
 			for (int j=0; j < plen[2*i];j++) {
 				cout << lcoeff[total+j] << " ";
+				poly_coeff.push_back(lcoeff[total+j]);
 				t2++;
 			}
 			total=total+t2;
+			cout << endl;
+			cout << "Laurent Polynomial : ";
+			Laurent<double> polydisp;
+			polydisp.setPoly(poly_coeff,plen[2*i+1]);
+			polydisp.dispPoly();
 			cout << endl;
 	}
 	cout << "--------------------------" << endl;
 	cout << " K : " << Kconst <<endl;
 }	
+
+void addLift(string &c,vector<double> addcoeff, int mp) {
+	ltype=ltype+c;
+	stages=ltype.size();
+	
+	int len_add=addcoeff.size();
+	plen.push_back(len_add);
+	plen.push_back(mp);
+	
+	lcoeff.insert(lcoeff.end(),addcoeff.begin(),addcoeff.end());
+}
 
 virtual ~liftscheme() {
 	

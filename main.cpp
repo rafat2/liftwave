@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
 	
-	string name="db4";
+	string name="db3";
 	double lp1_a[] = {0.9501,0.2311,0.6068,0.4860,0.8913,0.7621,0.4565,0.0185,0.8214,
 	0.4447,0.6154,0.7919,0.9218,0.7382,0.1763,0.4057};
 	/*double lp1_a[] = {1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,
@@ -19,7 +19,17 @@ int main()
 	vector<double> sig;
     sig.assign(lp1_a,lp1_a + sizeof(lp1_a)/sizeof(double));
 	
-	lwt<double> dlift(sig,name);
+	liftscheme blift(name);
+	string c="d";
+	vector<double> addl;
+	addl.push_back(0.500);
+	addl.push_back(-0.125);
+	
+	int mp=0;
+	blift.addLift(c,addl,mp);
+	blift.disp();
+	
+	lwt<double> dlift(sig,blift);
 	vector<double> a,d;
 	dlift.getCoeff(a,d);
 	cout << " Approximation : " << endl;
@@ -34,7 +44,7 @@ int main()
 	}
 	cout << endl;
 	
-	ilwt<double> idlift(a,d,name);
+	ilwt<double> idlift(a,d,blift);
 	vector<double> oup;
 	idlift.getSignal(oup);
 	

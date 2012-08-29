@@ -16,8 +16,7 @@ class lwt {
 	vector<T> cA,cD;
 
 public:
-	lwt(vector<T> &signal, string &name){
-	liftscheme lft(name);
+    lwt(vector<T> &signal, liftscheme &lft){
 	vector<double> coeff;
 	vector<int> lenv;
 	string lat;
@@ -80,6 +79,15 @@ public:
 		
 	}
 	
+	lwt(vector<T> &signal, string &name){
+	liftscheme lft(name);
+	lwt<T> wavelift(signal,lft);
+	vector<T> sx,dx;
+	wavelift.getCoeff(sx,dx);
+	cA=sx;
+	cD=dx;
+	}
+	
 void getCoeff(vector<T> &appx, vector<T> &det) {
 	appx = cA;
 	det = cD;
@@ -97,8 +105,7 @@ class ilwt {
 	vector<T> signal;
 
 public:
-	ilwt(vector<T> &sl, vector<T> &dl, string &name){
-	liftscheme lft(name);
+	ilwt(vector<T> &sl, vector<T> &dl, liftscheme &lft){
 	vector<double> coeff;
 	vector<int> lenv;
 	string lat;
@@ -164,6 +171,14 @@ public:
 	
 	signal=idwt_oup;
 	
+	}
+	
+	ilwt(vector<T> &sl,vector<T> &dl, string &name){
+	liftscheme lft(name);
+	ilwt<T> wavelift(sl,dl,lft);
+	vector<T> sigx;
+	wavelift.getSignal(sigx);
+	signal=sigx;
 	}
 	
 void getSignal(vector<T> &sig) {
