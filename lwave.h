@@ -14,9 +14,12 @@ using namespace std;
 template <typename T>
 class lwt {
 	vector<T> cA,cD;
+	vector<int> cD_length;
+	int level;
 
 public:
     lwt(vector<T> &signal, liftscheme &lft){
+	level=1;	
 	vector<double> coeff;
 	vector<int> lenv;
 	string lat;
@@ -76,21 +79,74 @@ public:
 	vecmult(dl,(T) K);
 	cA=sl;
 	cD=dl;
+	cD_length.clear();
+	cD_length.push_back((int) cD.size());
 		
 	}
 	
 	lwt(vector<T> &signal, string &name){
+	level=1;	
 	liftscheme lft(name);
 	lwt<T> wavelift(signal,lft);
 	vector<T> sx,dx;
 	wavelift.getCoeff(sx,dx);
 	cA=sx;
 	cD=dx;
+	cD_length.clear();
+	cD_length.push_back((int) cD.size());
+	}
+	
+	lwt(vector<T> &signal, liftscheme &lft, int &J) {
+	/*	int Max_Iter;
+		Max_Iter = (int) ceil(log( double(signal.size()))/log (2.0)) - 1;
+
+		if ( Max_Iter < J) {
+			J = Max_Iter;
+
+		}*/
+		
+		vector<T> temp=signal;
+		vector<T> det,temp2;
+		vector<int> len_det;
+		
+		for (int iter=0; iter < J; iter++) {
+			lwt jlevel(temp,lft);
+			jlevel.getCoeff(temp,temp2);
+			int len_d = temp2.size();
+			det.insert(det.begin(),temp2.begin(),temp2.end());
+			len_det.insert(len_det.begin(),len_d);
+		}
+		cA=temp;
+		cD=det;
+		cD_length=len_det;
+		level = J;
+		
+	}
+	
+	lwt(vector<T> &signal, string &name, int &J){
+	liftscheme lft(name);
+	lwt<T> wavelift(signal,lft);
+	vector<T> sx,dx;
+	wavelift.getCoeff(sx,dx);
+	cA=sx;
+	cD=dx;
+	vector<int> cdlen;
+	wavelift.getDetailVec(cdlen);
+	cD_length=cdlen;
+	level=J;
 	}
 	
 void getCoeff(vector<T> &appx, vector<T> &det) {
 	appx = cA;
 	det = cD;
+}
+
+void getDetailVec(vector<int> &detvec) {
+	detvec=cD_length;
+}
+
+int getLevels() {
+	return level;
 }
 	
 	
@@ -176,6 +232,37 @@ public:
 	ilwt(vector<T> &sl,vector<T> &dl, string &name){
 	liftscheme lft(name);
 	ilwt<T> wavelift(sl,dl,lft);
+	vector<T> sigx;
+	wavelift.getSignal(sigx);
+	signal=sigx;
+	}
+	
+	ilwt(lwt<T> &wt,liftscheme &lft) {
+	int J=wt.getLevels();
+	vector<T> sl,dl;
+	wt.getCoeff(sl,dl);
+	vector<int> detv;
+	
+	wt.getDetailVec(detv);
+	int total=0;
+	
+	for (int i=0; i < J; i++) {
+		vector<T> temp,temp2;
+		for (int j=0; j < (int) detv[i]; j++) {
+			temp.push_back(dl[total+j]);
+		}
+		total=total+(int) detv[i];
+		ilwt<T> iwt(sl,temp,lft);
+		iwt.getSignal(temp2);
+		sl=temp2;
+		
+	}
+	signal=sl;
+	}
+	
+	ilwt(lwt<T> &wt, string &name){
+	liftscheme lft(name);
+	ilwt<T> wavelift(wt,lft);
 	vector<T> sigx;
 	wavelift.getSignal(sigx);
 	signal=sigx;
