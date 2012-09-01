@@ -45,5 +45,16 @@ void inline merge(vector<T> &sig, vector<T> &even, vector<T> &odd) {
 	}
 }
 
+template <typename T> 
+void inline transpose(vector<T> &sig, int rows, int cols,vector<T> &col) {
+	
+	for (int i=0; i < cols; i++) {
+		for (int j=0; j < rows; j++) {
+			col.push_back(sig[i+j*cols]);
+		}
+	}
+	
+}
+
 
 #endif

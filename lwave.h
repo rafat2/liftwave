@@ -48,7 +48,7 @@ public:
 			for (int len_dl = 0; len_dl < (int) dl.size();len_dl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < sl.size()) {
+					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < (int) sl.size()) {
 						temp=temp+filt[lf]*sl[len_dl+max_pow-lf];
 					
 					}
@@ -62,7 +62,7 @@ public:
 			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < dl.size()) {
+					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < (int) dl.size()) {
 						temp=temp+filt[lf]*dl[len_sl+max_pow-lf];
 					
 					}
@@ -196,7 +196,7 @@ public:
 			for (int len_dl = 0; len_dl < (int) dl.size();len_dl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < sl.size()) {
+					if ((len_dl+max_pow-lf) >= 0 && (len_dl+max_pow-lf) < (int) sl.size()) {
 						temp=temp+filt[lf]*sl[len_dl+max_pow-lf];
 					
 					}
@@ -210,7 +210,7 @@ public:
 			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
-					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < dl.size()) {
+					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < (int) dl.size()) {
 						temp=temp+filt[lf]*dl[len_sl+max_pow-lf];
 					
 					}
@@ -274,6 +274,137 @@ void getSignal(vector<T> &sig) {
 	
 	virtual ~ilwt()
 	{
+	}
+};
+
+template <typename T>
+class lwt2 {
+	vector<T> cLL,cLH,cHL,cHH;
+	int rowLL,colLL;
+	int rowLH,colLH;
+	int rowHL,colHL;
+	int rowHH,colHH;
+	
+public:
+    lwt2(vector<T> &signal,int rows, int cols, liftscheme &lft) {
+		vector<T> L,H;
+		int rows_L,cols_L,rows_H,cols_H;
+		rows_L=rows;
+		rows_H=rows;
+		for (int i=0; i < rows; i++) {
+			vector<T> temp;
+			temp.assign(signal.begin()+i*cols,signal.begin()+(i+1)*cols);
+			lwt<T> lwt1(temp,lft);
+			vector<T> a,d;
+	        lwt1.getCoeff(a,d);
+			L.insert(L.end(),a.begin(),a.end());
+			H.insert(H.end(),d.begin(),d.end());
+			if (i==0) {
+				cols_L=a.size();
+				cols_H=d.size();
+			}
+			
+		}
+		
+		vector<T> LT,HT;
+		transpose(L,rows_L,cols_L,LT);
+		transpose(H,rows_H,cols_H,HT);
+		int rows_ll,cols_ll,rows_lh,cols_lh;
+		
+		vector<T> LL,LH;
+		
+		// Low Pass Stage
+		cols_ll=cols_L;
+		cols_lh=cols_L;
+
+		for (int i=0; i < cols_L; i++) {
+			vector<T> temp;
+			temp.assign(LT.begin()+i*rows_L,LT.begin()+(i+1)*rows_L);
+			lwt<T> lwt1(temp,lft);
+			vector<T> a,d;
+	        lwt1.getCoeff(a,d);
+			LL.insert(LL.end(),a.begin(),a.end());
+			LH.insert(LH.end(),d.begin(),d.end());
+			if (i==0) {
+				rows_ll=a.size();
+				rows_lh=d.size();
+			}
+			
+		}
+		
+		
+		int rows_hl,cols_hl,rows_hh,cols_hh;
+		
+		vector<T> HL,HH;
+		
+		// High Pass Stage
+		cols_hl=cols_H;
+		cols_hh=cols_H;
+		for (int i=0; i < cols_H; i++) {
+			vector<T> temp;
+			temp.assign(HT.begin()+i*rows_H,HT.begin()+(i+1)*rows_H);
+			lwt<T> lwt1(temp,lft);
+			vector<T> a,d;
+	        lwt1.getCoeff(a,d);
+			HL.insert(HL.end(),a.begin(),a.end());
+			HH.insert(HH.end(),d.begin(),d.end());
+			if (i==0) {
+				rows_hl=a.size();
+				rows_hh=d.size();
+			}
+			
+		}
+		
+		
+		
+		//cLL=LL;cLH=LH;cHL=HL;cHH=HH;
+		transpose(LL,cols_ll,rows_ll,cLL);
+		transpose(LH,cols_lh,rows_lh,cLH);
+		transpose(HL,cols_hl,rows_hl,cHL);
+		transpose(HH,cols_hh,rows_hh,cHH);
+		rowLL=rows_ll;rowLH=rows_lh;
+		rowHL=rows_hl;rowHH=rows_hh;
+		colLL=cols_ll;colLH=cols_lh;
+		colHL=cols_hl;colHH=cols_hh;
+		
+		
+	}	
+	
+void getCoef(vector<T> &aLL, vector<T> &aLH, vector<T> &aHL, vector<T> &aHH) {
+	aLL=cLL;
+	aLH=cLH;
+	aHL=cHL;
+	aHH=cHH;
+	
+}	
+
+void getDim(vector<int> &dimvec) {
+	dimvec.push_back(rowLL);
+	dimvec.push_back(colLL);
+	dimvec.push_back(rowLH);
+	dimvec.push_back(colLH);
+	dimvec.push_back(rowHL);
+	dimvec.push_back(colHL);
+	dimvec.push_back(rowHH);
+	dimvec.push_back(colHH);
+}
+	
+	virtual ~lwt2() {
+		
+	}
+};
+
+template <typename T>
+class ilwt2 {
+	
+public:
+    ilwt2(lwt2<T> &wt,liftscheme &lft) {
+		
+		
+	}	
+	
+	virtual ~ilwt2() {
+		
 	}
 };
 
