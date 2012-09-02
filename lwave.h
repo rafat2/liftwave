@@ -396,12 +396,106 @@ void getDim(vector<int> &dimvec) {
 
 template <typename T>
 class ilwt2 {
+	vector<T> signal;
+	int oup_row, oup_col;
 	
 public:
     ilwt2(lwt2<T> &wt,liftscheme &lft) {
+		vector<T> A,H,V,D;
+		wt.getCoef(A,H,V,D);
+		vector<int> length;
+		wt.getDim(length);
+		
+		int cols_L=length[1];
+		
+		int rows_LL=length[0];
+		int rows_LH=length[2];
+		
+		vector<T> AT,HT,VT,DT;
+		
+		transpose(A,length[0],length[1],AT);
+		transpose(H,length[2],length[3],HT);
+		transpose(V,length[4],length[5],VT);
+		transpose(D,length[6],length[7],DT);
+		vector<T> L;
+		int rows_L;
+		
+		for (int i=0; i < cols_L; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(AT.begin()+i*rows_LL,AT.begin()+(i+1)*rows_LL);
+			temp2.assign(HT.begin()+i*rows_LH,HT.begin()+(i+1)*rows_LH);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			L.insert(L.end(),sig.begin(),sig.end());
+			if (i==0) {
+				rows_L=(int) sig.size();
+			}
+			
+			
+		}
+		
+		vector<T> L2;
+		transpose(L,cols_L,rows_L,L2);
+		
+		int cols_H=length[5];
+		
+		int rows_HL=length[4];
+		int rows_HH=length[6];
+		vector<T> H1;
+		int rows_H;
+		
+		for (int i=0; i < cols_H; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(VT.begin()+i*rows_HL,VT.begin()+(i+1)*rows_HL);
+			temp2.assign(DT.begin()+i*rows_HH,DT.begin()+(i+1)*rows_HH);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			H1.insert(H1.end(),sig.begin(),sig.end());
+			if (i==0) {
+				rows_H=(int) sig.size();
+			}
+			
+			
+		}
+		
+		vector<T> H2;
+		transpose(H1,cols_H,rows_H,H2);
+		
+		vector<T> oup;
+		int cx;
+		
+		for (int i=0; i < rows_L; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(L2.begin()+i*cols_L,L2.begin()+(i+1)*cols_L);
+			temp2.assign(H2.begin()+i*cols_H,H2.begin()+(i+1)*cols_H);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			oup.insert(oup.end(),sig.begin(),sig.end());
+			if (i==0) {
+				cx=(int) sig.size();
+			}
+			
+			
+		}
+		
+		signal=oup;
+		oup_row=rows_L;
+		oup_col=cx;
 		
 		
 	}	
+
+void getSignal(vector<T> &ilwt_oup) {
+	ilwt_oup=signal;
+}	
+
+void getDim(vector<int> &sigdim) {
+	sigdim.push_back(oup_row);
+	sigdim.push_back(oup_col);
+}
 	
 	virtual ~ilwt2() {
 		

@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
 	
-	string name="db2";
+	string name="db1";
 	int J=1;
 	/*
 	double lp1_a[] = {0.9501,0.2311,0.6068,0.4860,0.8913,0.7621,0.4565,0.0185,0.8214,
@@ -22,7 +22,7 @@ int main()
     //sig.assign(lp1_a,lp1_a + sizeof(lp1_a)/sizeof(double));
 	
 	for (int i=0; i < 88;i ++) {
-		sig.push_back(1.000);
+		sig.push_back((double) (i+1));
 	}
 	
 	int rows=11;
@@ -37,8 +37,18 @@ int main()
 	lift2.getDim(lengths);
 	cout << A.size() << " " << B.size() << " " << C.size() << " " << D.size() << endl;
 	cout << lengths.size() << endl;
-	for (int i=0; i < (int) B.size(); i++) {
-		cout << i << " " << B[i] << endl;
+	for (int i=0; i < (int) D.size(); i++) {
+		cout << i << " " << D[i] << endl;
+	}
+	
+	ilwt2<double> ilift2(lift2,blift);
+	vector<double> oup;
+	ilift2.getSignal(oup);
+	vector<int> oup_dim;
+	ilift2.getDim(oup_dim);
+	cout << oup_dim[0] << " :: " << oup_dim[1] << endl;
+	for (int i=0; i < (int) oup.size(); i++) {
+		cout << i << " " << oup[i] << endl;
 	}
 	
 	
