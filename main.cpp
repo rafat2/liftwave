@@ -29,7 +29,7 @@ int main()
 	int cols=8;
 	
 	liftscheme blift(name);
-	lwt2<double> lift2(sig,rows,cols,blift);
+	lwt2<double> lift2(sig,rows,cols,blift,J);
 	
 	vector<double> A,B,C,D;
 	lift2.getCoef(A,B,C,D);
@@ -40,6 +40,13 @@ int main()
 	for (int i=0; i < (int) D.size(); i++) {
 		cout << i << " " << D[i] << endl;
 	}
+	cout << lift2.getLevels() << endl;
+	
+	for (int i=0; i < (int) lengths.size(); i++) {
+		cout << i << " " << lengths[i] << endl;
+	}
+	
+	cout << lift2.getLevels() << endl;
 	
 	ilwt2<double> ilift2(lift2,blift);
 	vector<double> oup;

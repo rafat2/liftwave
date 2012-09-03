@@ -125,7 +125,7 @@ public:
 	
 	lwt(vector<T> &signal, string &name, int &J){
 	liftscheme lft(name);
-	lwt<T> wavelift(signal,lft);
+	lwt<T> wavelift(signal,lft,J);
 	vector<T> sx,dx;
 	wavelift.getCoeff(sx,dx);
 	cA=sx;
@@ -284,6 +284,8 @@ class lwt2 {
 	int rowLH,colLH;
 	int rowHL,colHL;
 	int rowHH,colHH;
+	int level;
+	vector<int> coef_lengths;
 	
 public:
     lwt2(vector<T> &signal,int rows, int cols, liftscheme &lft) {
@@ -366,9 +368,56 @@ public:
 		rowHL=rows_hl;rowHH=rows_hh;
 		colLL=cols_ll;colLH=cols_lh;
 		colHL=cols_hl;colHH=cols_hh;
+		level=1;
+		coef_lengths.push_back(rowLL);
+		coef_lengths.push_back(colLL);
+		coef_lengths.push_back(rowLH);
+		coef_lengths.push_back(colLH);
+		coef_lengths.push_back(rowHL);
+		coef_lengths.push_back(colHL);
+		coef_lengths.push_back(rowHH);
+		coef_lengths.push_back(colHH);
 		
 		
 	}	
+	
+	lwt2(vector<T> &signal,int rows, int cols, liftscheme &lft, int J) {
+		vector<T> A1,B1,C1,D1;
+		vector<int> siglen;
+		
+		for (int i=0; i < J; i++) {
+			lwt2<T> wt2(signal, rows, cols,lft);
+			vector<T> tempA,tempB,tempC,tempD;
+			vector<int> temp_siglen;
+			wt2.getCoef(tempA,tempB,tempC,tempD);
+			signal=tempA;
+			A1=tempA;
+			B1.insert(B1.begin(),tempB.begin(),tempB.end());
+			C1.insert(C1.begin(),tempC.begin(),tempC.end());
+			D1.insert(D1.begin(),tempD.begin(),tempD.end());
+			
+			wt2.getDim(temp_siglen);
+			rows=temp_siglen[0];
+			cols=temp_siglen[1];
+			if (i==J-1) {
+				siglen.insert(siglen.begin(),temp_siglen.begin(),temp_siglen.end());
+			} else {
+				siglen.insert(siglen.begin(),temp_siglen.begin()+2,temp_siglen.end());
+			}
+			
+			
+			
+		}
+		cLL=A1;
+		cLH=B1;
+		cHL=C1;
+		cHH=D1;
+		level = J;
+		coef_lengths=siglen;
+		
+		
+		
+	}
 	
 void getCoef(vector<T> &aLL, vector<T> &aLH, vector<T> &aHL, vector<T> &aHH) {
 	aLL=cLL;
@@ -379,14 +428,12 @@ void getCoef(vector<T> &aLL, vector<T> &aLH, vector<T> &aHL, vector<T> &aHH) {
 }	
 
 void getDim(vector<int> &dimvec) {
-	dimvec.push_back(rowLL);
-	dimvec.push_back(colLL);
-	dimvec.push_back(rowLH);
-	dimvec.push_back(colLH);
-	dimvec.push_back(rowHL);
-	dimvec.push_back(colHL);
-	dimvec.push_back(rowHH);
-	dimvec.push_back(colHH);
+	
+	dimvec = coef_lengths;
+}
+
+int getLevels() {
+	return level;
 }
 	
 	virtual ~lwt2() {
@@ -400,7 +447,91 @@ class ilwt2 {
 	int oup_row, oup_col;
 	
 public:
-    ilwt2(lwt2<T> &wt,liftscheme &lft) {
+ilwt2(vector<T> &A,vector<T> &H,vector<T> &V,vector<T> &D,vector<int> &length,liftscheme &lft) {
+		
+		int cols_L=length[1];
+		
+		int rows_LL=length[0];
+		int rows_LH=length[2];
+		
+		vector<T> AT,HT,VT,DT;
+		
+		transpose(A,length[0],length[1],AT);
+		transpose(H,length[2],length[3],HT);
+		transpose(V,length[4],length[5],VT);
+		transpose(D,length[6],length[7],DT);
+		vector<T> L;
+		int rows_L;
+		
+		for (int i=0; i < cols_L; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(AT.begin()+i*rows_LL,AT.begin()+(i+1)*rows_LL);
+			temp2.assign(HT.begin()+i*rows_LH,HT.begin()+(i+1)*rows_LH);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			L.insert(L.end(),sig.begin(),sig.end());
+			if (i==0) {
+				rows_L=(int) sig.size();
+			}
+			
+			
+		}
+		
+		vector<T> L2;
+		transpose(L,cols_L,rows_L,L2);
+		
+		int cols_H=length[5];
+		
+		int rows_HL=length[4];
+		int rows_HH=length[6];
+		vector<T> H1;
+		int rows_H;
+		
+		for (int i=0; i < cols_H; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(VT.begin()+i*rows_HL,VT.begin()+(i+1)*rows_HL);
+			temp2.assign(DT.begin()+i*rows_HH,DT.begin()+(i+1)*rows_HH);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			H1.insert(H1.end(),sig.begin(),sig.end());
+			if (i==0) {
+				rows_H=(int) sig.size();
+			}
+			
+			
+		}
+		
+		vector<T> H2;
+		transpose(H1,cols_H,rows_H,H2);
+		
+		vector<T> oup;
+		int cx;
+		
+		for (int i=0; i < rows_L; i++) {
+			vector<T> temp1,temp2;
+			temp1.assign(L2.begin()+i*cols_L,L2.begin()+(i+1)*cols_L);
+			temp2.assign(H2.begin()+i*cols_H,H2.begin()+(i+1)*cols_H);
+			ilwt<T> iwt(temp1,temp2,lft);
+			vector<T> sig;
+			iwt.getSignal(sig);
+			oup.insert(oup.end(),sig.begin(),sig.end());
+			if (i==0) {
+				cx=(int) sig.size();
+			}
+			
+			
+		}
+		
+		signal=oup;
+		oup_row=rows_L;
+		oup_col=cx;
+		
+		
+	}	
+    
+   /* ilwt2(lwt2<T> &wt,liftscheme &lft) {
 		vector<T> A,H,V,D;
 		wt.getCoef(A,H,V,D);
 		vector<int> length;
@@ -486,7 +617,101 @@ public:
 		oup_col=cx;
 		
 		
-	}	
+	}	*/
+	
+	ilwt2(lwt2<T> &wt,liftscheme &lft) {
+		int J = wt.getLevels();
+		vector<T> A1,B1,C1,D1;
+		wt.getCoef(A1,B1,C1,D1);
+		vector<int> len_coef;
+		wt.getDim(len_coef);
+		int slevel;
+		
+		int count = 0;
+		vector<T> A,H,V,D;
+		A=A1;
+		vector<int> rxcx;
+		
+		for (int i=0; i < J; i++) {
+			vector<int> temp_coef,detlenH,detlenV,detlenD;
+			slevel = J-i;
+			if (i==0) {
+				temp_coef.assign(len_coef.begin(),len_coef.begin()+8);
+				count=count+8;
+			} else {
+				temp_coef.assign(len_coef.begin()+count,len_coef.begin()+count+6);
+				temp_coef.insert(temp_coef.begin(),rxcx.begin(),rxcx.end());
+				count=count+6;
+				
+			}
+			// Get LH,HL and HH coefficients
+			getDetails(wt,"LH",slevel,H,detlenH);
+			getDetails(wt,"HL",slevel,V,detlenV);
+			getDetails(wt,"HH",slevel,D,detlenD);
+
+			ilwt2<T> iwt2(A,H,V,D,temp_coef,lft);
+			vector<T> temp;
+			iwt2.getSignal(temp);
+			rxcx.clear();
+			iwt2.getDim(rxcx);
+			oup_row=rxcx[0];
+			oup_col=rxcx[1];
+			A=temp;
+		}
+		    signal=A;
+			
+			
+	}
+
+void getDetails(lwt2<T> &wt, string align, int slevel, vector<T> &det_vec, vector<int> det_len) {
+	int J = wt.getLevels();
+	int lev;
+	if (slevel > J) {
+		cout << " Decomposition has only " << J << " levels" << endl;
+		exit(1);
+	} else {
+		lev=J-slevel;
+	}
+	
+	vector<int> sig_vec;
+	wt.getDim(sig_vec);
+	vector<T> A1,B1,C1,D1;
+	wt.getCoef(A1,B1,C1,D1);
+	int total=0;
+	
+	if (align == "LH" || align == "lh") {
+		
+		for (int i=0; i < lev; i++) {
+			total=total+sig_vec[2+i*6]*sig_vec[3+i*6];			
+		}
+		det_vec.assign(B1.begin()+total,B1.begin()+total+sig_vec[2+lev*6]*sig_vec[3+lev*6]);
+		det_len.push_back(sig_vec[3+lev*6]);
+		det_len.push_back(sig_vec[2+lev*6]);
+		
+	} else if (align == "HL" || align == "hl") {
+		
+		for (int i=0; i < lev; i++) {
+			total=total+sig_vec[4+i*6]*sig_vec[5+i*6];			
+		}
+		det_vec.assign(C1.begin()+total,C1.begin()+total+sig_vec[4+lev*6]*sig_vec[5+lev*6]);
+		det_len.push_back(sig_vec[5+lev*6]);
+		det_len.push_back(sig_vec[4+lev*6]);
+		
+	} else if (align == "HH" || align == "hh") {
+		
+		for (int i=0; i < lev; i++) {
+			total=total+sig_vec[6+i*6]*sig_vec[7+i*6];			
+		}
+		det_vec.assign(D1.begin()+total,D1.begin()+total+sig_vec[6+lev*6]*sig_vec[7+lev*6]);
+		det_len.push_back(sig_vec[7+lev*6]);
+		det_len.push_back(sig_vec[6+lev*6]);
+		
+	} else {
+		cout << "Accepted filter stages are LH or lh, HL or hl and HH or hh" << endl;
+		exit(1);
+	}
+	
+}	
 
 void getSignal(vector<T> &ilwt_oup) {
 	ilwt_oup=signal;
