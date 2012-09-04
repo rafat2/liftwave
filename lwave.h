@@ -82,10 +82,11 @@ public:
 				dl[len_dl]=dl[len_dl]-temp;
 				
 			}
+		
 			
 		} else if (lft_type == 'p') {
 			
-			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
+			for (int len_sl = 0; len_sl < (int) dl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
 					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < (int) dl.size()) {
@@ -233,7 +234,7 @@ public:
 			
 		} else if (lft_type == 'p') {
 			
-			for (int len_sl = 0; len_sl < (int) sl.size();len_sl++) {
+			for (int len_sl = 0; len_sl < (int) dl.size();len_sl++) {
 				T temp = (T) 0.0;
 				for (int lf=0; lf < len_filt; lf++) {
 					if ((len_sl+max_pow-lf) >= 0 && (len_sl+max_pow-lf) < (int) dl.size()) {
@@ -338,6 +339,9 @@ public:
 		transpose(L,rows_L,cols_L,LT);
 		transpose(H,rows_H,cols_H,HT);
 		int rows_ll,cols_ll,rows_lh,cols_lh;
+		
+		// Remove cout
+		
 		
 		vector<T> LL,LH;
 		
