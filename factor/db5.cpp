@@ -37,7 +37,7 @@ int main()
 
 	
 	Laurent<double> lpd,hpd,lpr,hpr;
-	int pow=4;
+	int pow=2;
 	orthfilt(name,pow,lpd,hpd,lpr,hpr);
 	//lpr.LaurentMult(lpr,pnz);
 	//hpr.LaurentMult(hpr,nz);
@@ -151,8 +151,8 @@ int main()
 	}
 	
 	leven = lodd;
-	lodd = loup[3];
-	Q.push_back(loup[2]);
+	lodd = loup[5];
+	Q.push_back(loup[4]);
 	loup.clear();
 	Div(leven,lodd,loup);
 	cout << "a4 and b4 components" << endl;

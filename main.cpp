@@ -11,8 +11,8 @@ using namespace std;
 int main()
 {
 	
-	string name="db5";
-	int J=2;
+	string name="db8";
+	int J=1;
 	/*
 	double lp1_a[] = {0.9501,0.2311,0.6068,0.4860,0.8913,0.7621,0.4565,0.0185,0.8214,
 	0.4447,0.6154,0.7919,0.9218,0.7382,0.1763,0.4057,0.254};
@@ -37,8 +37,8 @@ int main()
 	lift2.getDim(lengths);
 	cout << A.size() << " " << B.size() << " " << C.size() << " " << D.size() << endl;
 	cout << lengths.size() << endl;
-	for (int i=0; i < (int) B.size(); i++) {
-		cout << i << " " << B[i] << endl;
+	for (int i=0; i < (int) D.size(); i++) {
+		cout << i << " " << D[i] << endl;
 	}
 	cout << lift2.getLevels() << endl;
 	

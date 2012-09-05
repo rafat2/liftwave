@@ -138,7 +138,7 @@ public:
 
 		    ltype="dpdpdp";
 			stages=6;
-			Kconst=1.2314418287192634;
+			Kconst=1.23144;
 			
 			//Stage 1,2,3,4,5,6
 			
@@ -157,6 +157,93 @@ public:
 			lcoeff.insert(lcoeff.begin(),d1,d1+1);
 			
 			int pl[]={1,0,2,0,2,1,2,1,2,-1,1,2};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "db6") {
+
+		    ltype="pdpdpdp";
+			stages=7;
+			Kconst=3.0899;
+			
+			//Stage 1,2,3,4,5,6,7
+			
+			double p1[]={-4.43447};
+			double d1[]={0.214593,-0.0633132};
+			double p2[]={-4.49311,9.97002};
+			double d2[]={0.17965,0.400695};
+			double p3[]={-0.0430454,0.00550295};
+			double d3[]={-0.122882,-0.428777};
+			double p4[]={0.0922131,-0.668385,2.33222};
+			
+			lcoeff.insert(lcoeff.begin(),p4,p4+3);
+			lcoeff.insert(lcoeff.begin(),d3,d3+2);
+			lcoeff.insert(lcoeff.begin(),p3,p3+2);
+			lcoeff.insert(lcoeff.begin(),d2,d2+2);
+			lcoeff.insert(lcoeff.begin(),p2,p2+2);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,0,2,0,2,2,2,-2,2,2,2,-2,3,5};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "db7") {
+			// db7 Factorization needs to be checked. Not sure if it is correct.
+		    ltype="dpdpdpdp";
+			stages=8;
+			Kconst=0.0474802;
+			
+			//Stage 1,2,3,4,5,6,7,8
+			
+			double d1[]={-0.196329};
+			double p1[]={0.189042,-0.622608};
+			double d2[]={0.473542,0.549384};
+			double p2[]={-2.41574,-0.655465};
+			double d3[]={-0.931487,0.366063};
+			double p3[]={-4.03893,1.05229};
+			double d4[]={-2.01533,0.247251};
+			double p4[]={0.496185};
+			
+			lcoeff.insert(lcoeff.begin(),p4,p4+1);
+			lcoeff.insert(lcoeff.begin(),d4,d4+2);
+			lcoeff.insert(lcoeff.begin(),p3,p3+2);
+			lcoeff.insert(lcoeff.begin(),d3,d3+2);
+			lcoeff.insert(lcoeff.begin(),p2,p2+2);
+			lcoeff.insert(lcoeff.begin(),d2,d2+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+2);
+			lcoeff.insert(lcoeff.begin(),d1,d1+1);
+			
+			int pl[]={1,0,2,0,2,1,2,1,2,0,2,1,2,0,1,0};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "db8") {
+
+		    ltype="pdpdpdpdp";
+			stages=9;
+			Kconst=3.54936;
+			
+			//Stage 1,2,3,4,5,6,7
+			
+			double p1[]={-5.74964};
+			double d1[]={0.168817,-0.0522692};
+			double p2[]={-7.40211,14.5428};
+			double d2[]={0.0609093,-0.0324021};
+			double p3[]={-2.7557,5.81872};
+			double d3[]={0.242022,0.945295};
+			double p4[]={-0.00180382,0.00018884};
+			double d4[]={-0.224138,-0.952614};
+			double p5[]={0.0271974,-0.246992,1.04974};
+			
+			lcoeff.insert(lcoeff.begin(),p5,p5+3);
+			lcoeff.insert(lcoeff.begin(),d4,d4+2);
+			lcoeff.insert(lcoeff.begin(),p4,p4+2);
+			lcoeff.insert(lcoeff.begin(),d3,d3+2);
+			lcoeff.insert(lcoeff.begin(),p3,p3+2);
+			lcoeff.insert(lcoeff.begin(),d2,d2+2);
+			lcoeff.insert(lcoeff.begin(),p2,p2+2);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,0,2,0,2,2,2,-2,2,4,2,-4,2,4,2,-4,3,7};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
 	} else if (name == "bior2.2") {

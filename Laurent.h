@@ -27,6 +27,7 @@
 #ifndef LAURENT_H_
 #define LAURENT_H_
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <vector>
 #include <string>
@@ -103,6 +104,27 @@ public:
 		}
 	}
 	cout << endl;
+
+}
+
+	void printPoly() {
+	int sz=poly.size();
+	ofstream pwrite("poly.txt",ios::app);
+	
+    pwrite << "{";
+	for (int i = 0;i < sz; i++) {
+		if (i == sz-1) {
+			pwrite << poly[i] << ",";
+		}
+		else if (poly[i+1] >= 0) {
+			pwrite << poly[i] << ",";
+		}
+		else if (poly[i+1] < 0) {
+			pwrite << poly[i] << ",";
+		}
+	}
+	pwrite << "}" << endl;
+	pwrite.close();
 
 }
 	int degree()  {
