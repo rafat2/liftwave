@@ -26,11 +26,18 @@ int main()
 	 * 
 	 * 
 	 */
-	
-    string name="sym4"; 
+	 
+	Laurent<double> pnz,nz;
+    vector<double> temp1;
+    temp1.push_back(1.0);
+    pnz.setPoly(temp1,1);
+    temp1.clear();
+    temp1.push_back(1.0);
+    nz.setPoly(temp1,-1);
+	 
+	string name="sym6";
 	Laurent<double> lpd,hpd,lpr,hpr;
-	int pow=4;
-	orthfilt(name,pow,lpd,hpd,lpr,hpr);
+	lpoly(name,lpd,hpd,lpr,hpr);
 	Laurent<double> leven,lodd;
 	EvenOdd(lpr,leven,lodd);
 	Laurent<double> heven,hodd;
@@ -88,8 +95,8 @@ int main()
 	}
 	
 	leven = lodd;
-	lodd = loup[3];
-	Q.push_back(loup[2]);
+	lodd = loup[1];
+	Q.push_back(loup[0]);
 	loup.clear();
 	Div(leven,lodd,loup);
 	cout << "a2 and b2 components" << endl;
@@ -107,8 +114,8 @@ int main()
 	}
 	
 	leven = lodd;
-	lodd = loup[1];
-	Q.push_back(loup[0]);
+	lodd = loup[5];
+	Q.push_back(loup[4]);
 		loup.clear();
 	Div(leven,lodd,loup);
 	cout << "a3 and b3 components" << endl;
@@ -128,6 +135,44 @@ int main()
 	leven = lodd;
 	lodd = loup[1];
 	Q.push_back(loup[0]);
+	loup.clear();
+	Div(leven,lodd,loup);
+	cout << "a4 and b4 components" << endl;
+	leven.dispPoly();
+	lodd.dispPoly();
+	cout <<endl;
+	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+		
+		quot.dispPoly();
+		rem.dispPoly();
+		cout << endl;
+	}
+	
+	leven = lodd;
+	lodd = loup[5];
+	Q.push_back(loup[4]);
+	loup.clear();
+	Div(leven,lodd,loup);
+	cout << "a5 and b5 components" << endl;
+	leven.dispPoly();
+	lodd.dispPoly();
+	cout <<endl;
+	cout << "All Quotients and Remainders obtained after the  step of gcd algorithm" << endl;
+	for (int i=0; i < (int) loup.size() / 2;i++) {
+		quot=loup[2*i];
+		rem=loup[2*i+1];
+		
+		quot.dispPoly();
+		rem.dispPoly();
+		cout << endl;
+	}
+	
+	leven = lodd;
+	lodd = loup[5];
+	Q.push_back(loup[4]);
 	cout << "an(constant) and bn(zero). A constant quotient is obtained which terminates the algorithm" << endl;
 	Div(leven,lodd,loup);
 	leven.dispPoly();
@@ -139,14 +184,18 @@ int main()
 	o.One();
 	z.Zero();
 	
-	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,oup,Kmat,P0,P0Inv,slift;
+	LaurentMat<double> Mat1,Mat2,Mat3,Mat4,Mat5,Mat6,oup,Kmat,P0,P0Inv,slift;
 	Mat1.SZ(Q[0]);
 	Mat2.TZ(Q[1]);
 	Mat3.SZ(Q[2]);
 	Mat4.TZ(Q[3]);
+	Mat5.SZ(Q[4]);
+	Mat6.TZ(Q[5]);
 	oup.MatMult(Mat1,Mat2);
 	oup.MatMult(oup,Mat3);
 	oup.MatMult(oup,Mat4);
+	oup.MatMult(oup,Mat5);
+	oup.MatMult(oup,Mat6);
 	oup.dispMat();
 	
 	// Set Constant Matrix [K,0,0,1/K]
@@ -189,16 +238,20 @@ int main()
 	for (int i=0; i < (int) Q.size(); i++)
 		Q[i].dispPoly();
 	
-	LaurentMat<double> Mat5;
+	LaurentMat<double> Mat7;
 	Mat1.SZ(Q[0]);
 	Mat2.TZ(Q[1]);
 	Mat3.SZ(Q[2]);
 	Mat4.TZ(Q[3]);
 	Mat5.SZ(Q[4]);
+	Mat6.TZ(Q[5]);
+	Mat7.SZ(Q[6]);
 	oup.MatMult(Mat1,Mat2);
 	oup.MatMult(oup,Mat3);
 	oup.MatMult(oup,Mat4);
 	oup.MatMult(oup,Mat5);
+	oup.MatMult(oup,Mat6);
+	oup.MatMult(oup,Mat7);
 	oup.MatMult(oup,Kmat);
 	oup.dispMat(); 
 	PZ.dispMat();
