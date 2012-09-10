@@ -323,6 +323,90 @@ public:
 			int pl[]={2,1,8,3};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
+	} else if (name == "bior3.1") {
+
+		    ltype="pdp";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double p2[]={-0.444444};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+1);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,1,0};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior3.3") {
+
+		    ltype="pdp";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double p2[]={0.083333,-0.444444,-0.083333};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+3);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,3,1};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior3.5") {
+
+		    ltype="pdp";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double p2[]={-0.01736,0.11805,-0.444444,-0.11805,0.01736};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+5);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,5,2};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior3.7") {
+
+		    ltype="pdp";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double p2[]={0.00379,-0.032552,0.13704,0.444444,-0.13704,0.032552,-0.00379};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+7);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,7,4};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
 	} else if (name == "sym2") {
 
 		    ltype="pdp";
@@ -339,6 +423,27 @@ public:
 			lcoeff.insert(lcoeff.begin(),p1,p1+1);
 			
 			int pl[]={1,0,2,0,1,1};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior3.9") {
+
+		    ltype="pdp";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double p2[]={-0.000854,0.008924,-0.044514,0.149007,0.444444,-0.149007,0.044514,-0.008924,0.000854};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+9);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,9,5};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
 	} else if (name == "sym3") {
@@ -466,23 +571,23 @@ public:
 			int pl[]={1,0,2,0,2,1,2,1,2,0,2,1,2,0,1,0};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
-	} else if (name == "db8") {
+	} else if (name == "sym8") {
 
 		    ltype="pdpdpdpdp";
 			stages=9;
-			Kconst=3.54936;
+			Kconst=0.101801;
 			
 			//Stage 1,2,3,4,5,6,7
 			
-			double p1[]={-5.74964};
-			double d1[]={0.168817,-0.0522692};
-			double p2[]={-7.40211,14.5428};
-			double d2[]={0.0609093,-0.0324021};
-			double p3[]={-2.7557,5.81872};
-			double d3[]={0.242022,0.945295};
-			double p4[]={-0.00180382,0.00018884};
-			double d4[]={-0.224138,-0.952614};
-			double p5[]={0.0271974,-0.246992,1.04974};
+			double p1[]={0.16028};
+			double d1[]={-0.156265,0.710259};
+			double p2[]={1.80785,-0.48815};
+			double d2[]={-0.486332,1.73992};
+			double p3[]={-0.256576,-0.568637};
+			double d3[]={4.77714,0.864854};
+			double p4[]={-0.63485,0.495251};
+			double d4[]={-3.38375,-11.182};
+			double p5[]={0.0185471,-0.027062,0.0894294};
 			
 			lcoeff.insert(lcoeff.begin(),p5,p5+3);
 			lcoeff.insert(lcoeff.begin(),d4,d4+2);
