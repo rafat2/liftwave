@@ -388,7 +388,7 @@ public:
 
 	} else if (name == "bior3.7") {
 
-		    ltype="pdp";
+		    ltype="pdd";
 			stages=3;
 			Kconst=0.471405;
 			
@@ -396,15 +396,59 @@ public:
 			
 			double p1[]={0.333333};
 			double d1[]={0.375,1.125};
-			double p2[]={0.00379,-0.032552,0.13704,0.444444,-0.13704,0.032552,-0.00379};
+			double d2[]={0.00379,-0.032552,0.13704,0.444444,-0.13704,0.032552,-0.00379};
 			
 			
 			
-			lcoeff.insert(lcoeff.begin(),p2,p2+7);
+			lcoeff.insert(lcoeff.begin(),d2,d2+7);
 			lcoeff.insert(lcoeff.begin(),d1,d1+2);
 			lcoeff.insert(lcoeff.begin(),p1,p1+1);
 			
 			int pl[]={1,-1,2,1,7,4};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior3.9") {
+
+		    ltype="pdd";
+			stages=3;
+			Kconst=0.471405;
+			
+			//Stage 1,2,3
+			
+			double p1[]={0.333333};
+			double d1[]={0.375,1.125};
+			double d2[]={-0.000854,0.008924,-0.044514,0.149007,0.444444,-0.149007,0.044514,-0.008924,0.000854};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),d2,d2+9);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+1);
+			
+			int pl[]={1,-1,2,1,9,5};
+			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
+
+	} else if (name == "bior4.4") {
+
+		    ltype="dpdp";
+			stages=4;
+			Kconst=-0.869864;
+			
+			//Stage 1,2,3,4
+			
+			double d1[]={1.58613,1.58613};
+			double p1[]={-1.07964,0.0529801};
+			double d2[]={0.882911,0.882911};
+			double p2[]={-0.443507,-1.57612};
+			
+			
+			
+			lcoeff.insert(lcoeff.begin(),p2,p2+2);
+			lcoeff.insert(lcoeff.begin(),d2,d2+2);
+			lcoeff.insert(lcoeff.begin(),p1,p1+2);
+			lcoeff.insert(lcoeff.begin(),d1,d1+2);
+			
+			int pl[]={2,1,2,0,2,0,2,2};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
 	} else if (name == "sym2") {
@@ -425,28 +469,7 @@ public:
 			int pl[]={1,0,2,0,1,1};
 			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
 
-	} else if (name == "bior3.9") {
-
-		    ltype="pdp";
-			stages=3;
-			Kconst=0.471405;
-			
-			//Stage 1,2,3
-			
-			double p1[]={0.333333};
-			double d1[]={0.375,1.125};
-			double p2[]={-0.000854,0.008924,-0.044514,0.149007,0.444444,-0.149007,0.044514,-0.008924,0.000854};
-			
-			
-			
-			lcoeff.insert(lcoeff.begin(),p2,p2+9);
-			lcoeff.insert(lcoeff.begin(),d1,d1+2);
-			lcoeff.insert(lcoeff.begin(),p1,p1+1);
-			
-			int pl[]={1,-1,2,1,9,5};
-			plen.assign (pl,pl + sizeof(pl)/sizeof(int));
-
-	} else if (name == "sym3") {
+	}  else if (name == "sym3") {
 
 		    ltype="dpdp";
 			stages=4;
