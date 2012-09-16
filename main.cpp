@@ -10,91 +10,60 @@ using namespace std;
 
 int main()
 {
-	
-	string name="sym7";
-	int J=1;
-	vector<double> sig;
-	
-	for (int i=0; i < 88;i ++) {
-		sig.push_back((double) (i+1));
-	}
-	
-	int rows=11;
-	int cols=8;
-	
-	cout << "INPUT : " << endl;
-	for (int i=0; i < (int) rows; i++) {
-		for (int j=0; j < (int) cols;j++) {
-			cout << sig[i*cols+j] << " ";
-			
-		}
-		cout << endl;
-		
-	}
-	
-	liftscheme blift(name);
-	lwt2<double> lift2(sig,rows,cols,blift,J);
-	
-	vector<double> A,B,C,D;
-	lift2.getCoef(A,B,C,D);
-	vector<int> lengths;
-	lift2.getDim(lengths);
-	cout << "Respective Size of All 4 Output vectors (LL,LH,HL,HH) : " ;
-	cout << A.size() << " " << B.size() << " " << C.size() << " " << D.size() << endl;
-	cout << "Length of Dimension Vector (8 at Level 1 + 6 at Level 2) :" <<  lengths.size() << endl;
-	cout << "Low Pass Component At Level 2 : " << endl;
-	for (int i=0; i < (int) lengths[0]; i++) {
-		for (int j=0; j < (int) lengths[1];j++) {
-			cout << A[i*lengths[1]+j] << " ";
-			
-		}
-		cout << endl;
-		
-	}
-	cout << " Levels : " << lift2.getLevels() << endl;
-	cout << " All 7 row/col pairs : " << endl;
-	for (int i=0; i < (int) lengths.size()/2; i++) {
-		cout << lengths[2*i] << " " << lengths[2*i+1 ] << endl;
-	}
-	
-	
-	int slevel = 1;
-	vector<double> H;
-	vector<int> detlenH;
-	
-	lift2.getDetails("LH",slevel,H,detlenH);
-	
-	cout << " Lengths of Horizontal Component at level 1 : " << detlenH[0] << " " << detlenH[1] << endl;
-	cout << " Horizontal Component at level 1 : " << endl;
-	
-	for (int i=0; i < (int) detlenH[0]; i++) {
-		for (int j=0; j < (int) detlenH[1];j++) {
-			cout << H[i*detlenH[1]+j] << " ";
-			
-		}
-		cout << endl;
-		
-	}
-	cout << endl;
-	
-	ilwt2<double> ilift2(lift2,blift);
-	vector<double> oup;
-	ilift2.getSignal(oup);
-	vector<int> oup_dim;
-	ilift2.getDim(oup_dim);
-	cout << "Output Dimensions : " << oup_dim[0] << " :: " << oup_dim[1] << endl;
-	cout << "OUTPUT : " << endl;
-	for (int i=0; i < (int) oup_dim[0]; i++) {
-		for (int j=0; j < (int) oup_dim[1];j++) {
-			cout << oup[i*oup_dim[1]+j] << " ";
-			
-		}
-		cout << endl;
-		
-	}
-	
-	
-	 
 
-	return 0;
+string name="db3";
+int J=2;
+double lp1_a[] = {0.9501,0.2311,0.6068,0.4860,0.8913,0.7621,0.4565,0.0185,0.8214,
+0.4447,0.6154,0.7919,0.9218,0.7382,0.1763,0.4057};
+/*double lp1_a[] = {1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,
+1.000,1.000,1.000,1.000,1.000,1.000,1.000};*/
+vector<double> sig;
+    sig.assign(lp1_a,lp1_a + sizeof(lp1_a)/sizeof(double));
+
+liftscheme blift(name);
+string c="d";
+vector<double> addl;
+addl.push_back(0.500);
+addl.push_back(-0.125);
+
+int mp=0;
+blift.addLift(c,addl,mp);
+blift.disp();
+
+lwt<double> dlift(sig,blift,J);
+vector<double> a,d;
+vector<int> lengths;
+dlift.getCoeff(a,d);
+dlift.getDetailVec(lengths);
+cout << " Approximation : " << endl;
+for (int i=0; i < a.size();i++) {
+cout << a[i] << " ";
+}
+cout << endl;
+
+cout << " Detail : " << endl;
+for (int i=0; i < d.size();i++) {
+cout << d[i] << " ";
+}
+cout << endl;
+
+cout << " Lengths Of Detail Vectors : " << endl;
+for (int i=0; i < lengths.size();i++) {
+cout << lengths[i] << " ";
+}
+cout << endl;
+
+
+ilwt<double> idlift(dlift,blift);
+vector<double> oup;
+idlift.getSignal(oup);
+
+cout << " Reconstructed : " << endl;
+for (int i=0; i < oup.size();i++) {
+cout << oup[i] << " ";
+}
+cout << endl;
+
+
+return 0;
 }
