@@ -11,8 +11,8 @@ using namespace std;
 int main()
 {
 	
-	string name="bior3.3";
-	int J=2;
+	string name="sym7";
+	int J=1;
 	vector<double> sig;
 	
 	for (int i=0; i < 88;i ++) {
