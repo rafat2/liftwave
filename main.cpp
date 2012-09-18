@@ -1,69 +1,79 @@
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include "lwave.h"
+//============================================================================
+// Name        : Laurent.cpp
+// Author      : Rafat Hussain
+// Version     :
+// Copyright   :
+// Description : 
+//============================================================================
 
+#include <iostream>
+#include <vector>
+#include "lwave.h"
 
 using namespace std;
 
-int main()
-{
+int main() {
+//    double re_array[]= {5.0,2.0,4.0,3.0};
+//	double re_array2[]= {2.0,2.0,-1.0,9.0};
+    double re_array[]= {-0.125,0.75,-0.125};
+	double re_array2[]= {0.25,0.25};
 
-string name="db3";
-int J=2;
-double lp1_a[] = {0.9501,0.2311,0.6068,0.4860,0.8913,0.7621,0.4565,0.0185,0.8214,
-0.4447,0.6154,0.7919,0.9218,0.7382,0.1763,0.4057};
-/*double lp1_a[] = {1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,
-1.000,1.000,1.000,1.000,1.000,1.000,1.000};*/
-vector<double> sig;
-    sig.assign(lp1_a,lp1_a + sizeof(lp1_a)/sizeof(double));
+	vector<double> a(re_array, re_array + sizeof(re_array)/sizeof(double));
+	vector<double> b(re_array2, re_array2 + sizeof(re_array2)/sizeof(double));
+//	int low=-2;
+//	int low2=2;
+    int low=1;
+	int low2=1;
+	Laurent<double> lp1,lp2,lp3,lp4,lp5,lp6;
+	lp1.setPoly(a,low);
+	lp2.setPoly(b,low2);
+	cout << lp1.degree()+1 << " " << lp2.degree()+1 << endl; // prints Laurent Test
 
-liftscheme blift(name);
-string c="d";
-vector<double> addl;
-addl.push_back(0.500);
-addl.push_back(-0.125);
+    vector<double> newvec;
+    lp1.getPoly(newvec);
+    cout << newvec.size() << endl;
 
-int mp=0;
-blift.addLift(c,addl,mp);
-blift.disp();
+    cout << "A : ";
+	lp1.dispPoly();
+	cout << "B : ";
+	lp2.dispPoly();
+	lp3.LaurentAdd(lp1,lp2);
+	cout << "A+B : ";
+	lp3.dispPoly();
+	lp3.LaurentSub(lp1,lp2);
+	cout << "A-B : ";
+    lp3.dispPoly();
 
-lwt<double> dlift(sig,blift,J);
-vector<double> a,d;
-vector<int> lengths;
-dlift.getCoeff(a,d);
-dlift.getDetailVec(lengths);
-cout << " Approximation : " << endl;
-for (int i=0; i < a.size();i++) {
-cout << a[i] << " ";
-}
-cout << endl;
+    lp4.LaurentMult(lp1,lp2);
+    cout << "A*B : ";
+    lp4.dispPoly();
 
-cout << " Detail : " << endl;
-for (int i=0; i < d.size();i++) {
-cout << d[i] << " ";
-}
-cout << endl;
+    lp5.zinv(lp1);
+    cout << "A(1/z) : ";
+    lp5.dispPoly();
 
-cout << " Lengths Of Detail Vectors : " << endl;
-for (int i=0; i < lengths.size();i++) {
-cout << lengths[i] << " ";
-}
-cout << endl;
+    //cout << lp5.isMono() << endl;
 
+    LaurentMat<double> Mat1;
+    Mat1.setMat(lp1,lp1,lp2,lp2);
+    Laurent<double> det1;
+    Mat1.Det(det1);
+    cout << "Determinant : ";
+    det1.dispPoly();
 
-ilwt<double> idlift(dlift,blift);
-vector<double> oup;
-idlift.getSignal(oup);
+    cout << "Mono : " << det1.isMono() << endl;
+	vector<Laurent<double> > lout;
+    Div(lp1,lp2,lout);
 
-cout << " Reconstructed : " << endl;
-for (int i=0; i < oup.size();i++) {
-cout << oup[i] << " ";
-}
-cout << endl;
+    for (unsigned int i=0; i < lout.size()/2; i++) {
+        cout << "Q" << i << ": ";
+        lout[2*i].dispPoly();
+        cout << endl;
+        cout << "R" << i << ": " ;
+        lout[2*i+1].dispPoly();
+        cout << endl;
 
-
-return 0;
+    }
+	
+	return 0;
 }
